@@ -751,8 +751,9 @@
         stamp: "Good food<br>starts here", plannerLabel: "Meal plan details", cityLabel: "Where in Israel?", budgetLabel: "Your food budget",
         periodLabel: "For how long?", oneDay: "One day", oneWeek: "One week", peopleLabel: "People to feed",
         peopleHint: "Recipes start at 2 servings.", plannedTitle: "Your meal plan", addRecipe: "+ Add recipe",
-        sharePlan: "Share meal plan", shareReady: "Your meal plan is ready to share.",
-        planCopied: "Meal plan copied. Paste it into a message to share.", shareFailed: "Could not share the meal plan. Please try again.",
+        sharePlan: "Share plan link", shareReady: "Meal plan link ready to share.",
+        shareCopied: "Meal plan link copied. Anyone with the link can open this plan without logging in.",
+        shareFailed: "Could not share the meal plan. Please try again.",
         plannedEmpty: "Add a recipe below and it will appear here.", pickerTitle: "Add a recipe",
         pickerCopy: "Search all recipes and add one straight to your plan.", close: "Close",
         searchPlaceholder: "Search recipes or ingredients…", searchRecipes: "Search recipes or ingredients",
@@ -790,8 +791,9 @@
         stamp: "אוכל טוב<br>מתחיל כאן", plannerLabel: "פרטי תכנון הארוחות", cityLabel: "איפה בישראל?", budgetLabel: "תקציב האוכל",
         periodLabel: "לאיזו תקופה?", oneDay: "יום אחד", oneWeek: "שבוע אחד", peopleLabel: "לכמה אנשים?",
         peopleHint: "המתכונים מחושבים במקור ל־2 מנות.", plannedTitle: "תוכנית הארוחות שלך", addRecipe: "+ הוספת מתכון",
-        sharePlan: "שיתוף תוכנית הארוחות", shareReady: "תוכנית הארוחות מוכנה לשיתוף.",
-        planCopied: "תוכנית הארוחות הועתקה. אפשר להדביק אותה בהודעה ולשתף.", shareFailed: "לא ניתן לשתף את תוכנית הארוחות. נסו שוב.",
+        sharePlan: "שיתוף קישור לתוכנית", shareReady: "קישור תוכנית הארוחות מוכן לשיתוף.",
+        shareCopied: "קישור תוכנית הארוחות הועתק. כל מי שיש לו את הקישור יכול לפתוח את התוכנית ללא התחברות.",
+        shareFailed: "לא ניתן לשתף את תוכנית הארוחות. נסו שוב.",
         plannedEmpty: "הוסיפו מתכון והוא יופיע כאן.", pickerTitle: "הוספת מתכון",
         pickerCopy: "חפשו בין המתכונים והוסיפו אחד ישירות לתוכנית.", close: "סגירה",
         searchPlaceholder: "חיפוש מתכון או מצרך…", searchRecipes: "חיפוש מתכון או מצרך",
@@ -829,8 +831,9 @@
         stamp: "الطعام الجيد<br>يبدأ من هنا", plannerLabel: "تفاصيل خطة الوجبات", cityLabel: "أين في إسرائيل؟", budgetLabel: "ميزانية الطعام",
         periodLabel: "لأي مدة؟", oneDay: "يوم واحد", oneWeek: "أسبوع واحد", peopleLabel: "عدد الأشخاص",
         peopleHint: "الوصفات محسوبة أساسًا لحصتين.", plannedTitle: "خطة وجباتك", addRecipe: "+ أضف وصفة",
-        sharePlan: "شارك خطة الوجبات", shareReady: "خطة الوجبات جاهزة للمشاركة.",
-        planCopied: "تم نسخ خطة الوجبات. الصقها في رسالة لمشاركتها.", shareFailed: "تعذّرت مشاركة خطة الوجبات. حاول مرة أخرى.",
+        sharePlan: "شارك رابط الخطة", shareReady: "رابط خطة الوجبات جاهز للمشاركة.",
+        shareCopied: "تم نسخ رابط خطة الوجبات. يمكن لأي شخص لديه الرابط فتح الخطة دون تسجيل الدخول.",
+        shareFailed: "تعذّرت مشاركة خطة الوجبات. حاول مرة أخرى.",
         plannedEmpty: "أضف وصفة وستظهر هنا.", pickerTitle: "أضف وصفة",
         pickerCopy: "ابحث في الوصفات وأضف واحدة مباشرة إلى خطتك.", close: "إغلاق",
         searchPlaceholder: "ابحث عن وصفة أو مكوّن…", searchRecipes: "ابحث عن وصفة أو مكوّن",
@@ -1533,6 +1536,13 @@
     const pickerResults = document.getElementById("picker-results");
     const pickerStatus = document.getElementById("picker-status");
     const plan = [];
+    const sharedPlanIds = new URLSearchParams(window.location.hash.slice(1)).get("plan");
+    if (sharedPlanIds) {
+      sharedPlanIds.split(",").slice(0, 7).forEach(id => {
+        const recipe = recipes.find(item => item.id === id);
+        if (recipe) plan.push(recipe);
+      });
+    }
     let visibleRecipeCount = 18;
 
     [...new Set(recipes.flatMap(recipe => recipe.categories))].sort().forEach(category => {
@@ -1866,14 +1876,15 @@
       if (plan.length === 0) return;
 
       const shareStatus = document.getElementById("share-status");
-      const message = `${t("plannedTitle")}\n${plan.map(recipe => `• ${recipe.name}`).join("\n")}`;
+      const shareUrl = new URL(document.querySelector('link[rel="canonical"]').href);
+      shareUrl.hash = new URLSearchParams({ plan: plan.map(recipe => recipe.id).join(",") }).toString();
       try {
         if (typeof navigator.share === "function") {
-          await navigator.share({ title: t("plannedTitle"), text: message });
+          await navigator.share({ title: t("plannedTitle"), url: shareUrl.href });
           shareStatus.textContent = t("shareReady");
         } else {
-          await navigator.clipboard.writeText(message);
-          shareStatus.textContent = t("planCopied");
+          await navigator.clipboard.writeText(shareUrl.href);
+          shareStatus.textContent = t("shareCopied");
         }
         shareStatus.hidden = false;
       } catch (error) {
