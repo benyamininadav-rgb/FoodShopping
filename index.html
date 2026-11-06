@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -75,6 +75,15 @@
     }
 
     .top-note { color: var(--muted); font-size: 13px; }
+    .language-control { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+    .language-control select { width: auto; min-height: 36px; padding: 6px 10px; }
+    [dir="rtl"] { letter-spacing: normal; }
+    [dir="rtl"] h1, [dir="rtl"] .section-heading h2 { letter-spacing: normal; }
+    [dir="rtl"] .input-wrap .currency { right: 13px; left: auto; }
+    [dir="rtl"] input[type="number"] { padding-right: 31px; padding-left: 12px; }
+    [dir="rtl"] .art-label { right: 12px; left: auto; }
+    [dir="rtl"] .footer-note { border-right: 3px solid #d6a56c; border-left: 0; border-radius: 9px 0 0 9px; }
+    [dir="rtl"] .plan-summary { padding-right: 14px; padding-left: 0; border-right: 1px solid var(--line); border-left: 0; }
 
     main { width: min(1160px, 90vw); margin: 0 auto; }
 
@@ -595,49 +604,57 @@
 <body>
   <header class="topbar">
     <a class="brand" href="#" aria-label="Platewise home"><span class="brand-mark" aria-hidden="true">✳</span> platewise</a>
-    <span class="top-note">A little more joy in your grocery budget</span>
+    <div class="language-control">
+      <label for="language" data-i18n="languageLabel">Language</label>
+      <select id="language" aria-label="Language" data-i18n-aria="languageLabel">
+        <option value="en">English</option>
+        <option value="he">עברית</option>
+        <option value="ar">العربية</option>
+      </select>
+    </div>
+    <span class="top-note" data-i18n="topNote">A little more joy in your grocery budget</span>
   </header>
 
   <main>
     <section class="hero" aria-labelledby="page-title">
       <div>
-        <p class="eyebrow">Your Israeli meal planner</p>
-        <h1 id="page-title">Eat well. Spend <span style="color:var(--green)">wisely.</span></h1>
-        <p class="hero-copy">Tell us roughly where you are and what you want to spend. We’ll help you find recipes and track down the ingredients nearby.</p>
+        <p class="eyebrow" data-i18n="eyebrow">Your Israeli meal planner</p>
+        <h1 id="page-title" data-i18n="heroTitle">Eat well. Spend wisely.</h1>
+        <p class="hero-copy" data-i18n="heroCopy">Tell us roughly where you are and what you want to spend. We’ll help you find recipes and track down the ingredients nearby.</p>
       </div>
-      <div class="hero-stamp" aria-label="Made for everyday meals"><span aria-hidden="true">🥬</span><strong>Good food<br>starts here</strong></div>
+      <div class="hero-stamp" aria-label="Made for everyday meals"><span aria-hidden="true">🥬</span><strong data-i18n="stamp">Good food<br>starts here</strong></div>
     </section>
 
-    <section class="planner" aria-label="Meal plan details">
+    <section class="planner" aria-label="Meal plan details" data-i18n-aria="plannerLabel">
       <div class="field">
-        <label for="city">Where in Israel?</label>
+        <label for="city" data-i18n="cityLabel">Where in Israel?</label>
         <select id="city">
-          <option value="Tel Aviv">Tel Aviv</option>
-          <option value="Jerusalem">Jerusalem</option>
-          <option value="Haifa">Haifa</option>
-          <option value="Beersheba">Beersheba</option>
-          <option value="Netanya">Netanya</option>
-          <option value="Rishon LeZion">Rishon LeZion</option>
-          <option value="Petah Tikva">Petah Tikva</option>
-          <option value="Ashdod">Ashdod</option>
-          <option value="Other location in Israel">Other location in Israel</option>
+          <option value="Tel Aviv" data-i18n="cityTelAviv">Tel Aviv</option>
+          <option value="Jerusalem" data-i18n="cityJerusalem">Jerusalem</option>
+          <option value="Haifa" data-i18n="cityHaifa">Haifa</option>
+          <option value="Beersheba" data-i18n="cityBeersheba">Beersheba</option>
+          <option value="Netanya" data-i18n="cityNetanya">Netanya</option>
+          <option value="Rishon LeZion" data-i18n="cityRishon">Rishon LeZion</option>
+          <option value="Petah Tikva" data-i18n="cityPetahTikva">Petah Tikva</option>
+          <option value="Ashdod" data-i18n="cityAshdod">Ashdod</option>
+          <option value="Other location in Israel" data-i18n="cityOther">Other location in Israel</option>
         </select>
       </div>
       <div class="field">
-        <label for="budget">Your food budget</label>
+        <label for="budget" data-i18n="budgetLabel">Your food budget</label>
         <div class="input-wrap"><span class="currency" aria-hidden="true">₪</span><input id="budget" type="number" min="1" step="10" value="250" inputmode="decimal"></div>
       </div>
       <div class="field">
-        <label for="period">For how long?</label>
+        <label for="period" data-i18n="periodLabel">For how long?</label>
         <select id="period">
-          <option value="day">One day</option>
-          <option value="week" selected>One week</option>
+          <option value="day" data-i18n="oneDay">One day</option>
+          <option value="week" selected data-i18n="oneWeek">One week</option>
         </select>
       </div>
       <div class="field">
-        <label for="people">People to feed</label>
+        <label for="people" data-i18n="peopleLabel">People to feed</label>
         <input id="people" type="number" min="1" max="100" step="1" value="2" inputmode="numeric">
-        <span class="field-hint">Recipes start at 2 servings.</span>
+        <span class="field-hint" data-i18n="peopleHint">Recipes start at 2 servings.</span>
       </div>
       <div class="plan-summary" aria-live="polite">
         <strong id="plan-total">₪0 planned</strong>
@@ -647,79 +664,221 @@
 
     <section class="planned-meals" aria-labelledby="planned-title">
       <div class="planned-heading">
-        <h2 id="planned-title">Your meal plan</h2>
+        <h2 id="planned-title" data-i18n="plannedTitle">Your meal plan</h2>
         <div class="planned-heading-actions">
           <span id="planned-count">0 meals selected</span>
-          <button class="button button-secondary planned-add-button" id="open-picker" type="button">+ Add recipe</button>
+          <button class="button button-secondary planned-add-button" id="open-picker" type="button" data-i18n="addRecipe">+ Add recipe</button>
         </div>
       </div>
-      <p class="planned-empty" id="planned-empty">Add a recipe below and it will appear here.</p>
+      <p class="planned-empty" id="planned-empty" data-i18n="plannedEmpty">Add a recipe below and it will appear here.</p>
       <ul class="planned-list" id="planned-list"></ul>
     </section>
 
     <dialog class="recipe-picker" id="recipe-picker" aria-labelledby="picker-title">
       <div class="picker-heading">
         <div>
-          <h2 id="picker-title">Add a recipe</h2>
-          <p>Search all recipes and add one straight to your plan.</p>
+          <h2 id="picker-title" data-i18n="pickerTitle">Add a recipe</h2>
+          <p data-i18n="pickerCopy">Search all recipes and add one straight to your plan.</p>
         </div>
-        <button class="button button-secondary picker-close" id="close-picker" type="button">Close</button>
+        <button class="button button-secondary picker-close" id="close-picker" type="button" data-i18n="close">Close</button>
       </div>
       <div class="picker-fields">
-        <input id="picker-search" type="search" placeholder="Search recipes or ingredients…" aria-label="Search recipes to add">
-        <select id="picker-category" aria-label="Filter recipes to add">
-          <option value="">All categories</option>
+        <input id="picker-search" type="search" placeholder="Search recipes or ingredients…" aria-label="Search recipes to add" data-i18n-placeholder="searchPlaceholder" data-i18n-aria="searchRecipes">
+        <select id="picker-category" aria-label="Filter recipes to add" data-i18n-aria="filterCategories">
+          <option value="" data-i18n="allCategories">All categories</option>
         </select>
       </div>
       <p class="picker-status" id="picker-status" aria-live="polite"></p>
       <div class="picker-results" id="picker-results"></div>
     </dialog>
 
-    <section class="store-bar" aria-label="Supermarkets near your selected city">
-      <span><strong>Popular stores near <span id="city-label">Tel Aviv</span></strong> <span aria-hidden="true">·</span> open a map search</span>
+    <section class="store-bar" aria-label="Supermarkets near your selected city" data-i18n-aria="storesLabel">
+      <span><strong><span data-i18n="popularStores">Popular stores near</span> <span id="city-label">Tel Aviv</span></strong> <span aria-hidden="true">·</span> <span data-i18n="openMapSearch">open a map search</span></span>
       <div class="store-options" id="store-options"></div>
     </section>
 
     <div class="section-heading">
       <div>
-        <h2>Recipes that fit real life</h2>
+        <h2 data-i18n="recipesTitle">Recipes that fit real life</h2>
         <p id="recipe-subtitle">Choose meals to build your plan. Each recipe serves about 2.</p>
       </div>
-      <span class="budget-pill"><span aria-hidden="true">●</span> Budget <strong id="budget-label">₪250 / week</strong></span>
+      <span class="budget-pill"><span aria-hidden="true">●</span> <span data-i18n="budgetWord">Budget</span> <strong id="budget-label">₪250 / week</strong></span>
     </div>
 
     <div class="recipe-tools" aria-label="Find a recipe">
-      <input id="recipe-search" type="search" placeholder="Search recipes or ingredients…" aria-label="Search recipes or ingredients">
-      <select id="category-filter" aria-label="Filter recipes by category">
-        <option value="">All categories</option>
+      <input id="recipe-search" type="search" placeholder="Search recipes or ingredients…" aria-label="Search recipes or ingredients" data-i18n-placeholder="searchPlaceholder" data-i18n-aria="searchRecipes">
+      <select id="category-filter" aria-label="Filter recipes by category" data-i18n-aria="filterCategories">
+        <option value="" data-i18n="allCategories">All categories</option>
       </select>
       <span class="recipe-count" id="recipe-count" aria-live="polite"></span>
     </div>
-    <section class="recipe-grid" id="recipe-grid" aria-label="Recipe suggestions"></section>
-    <div class="show-more-wrap"><button class="button button-secondary show-more-button" id="show-more" type="button">Show more recipes</button></div>
+    <section class="recipe-grid" id="recipe-grid" aria-label="Recipe suggestions" data-i18n-aria="recipeSuggestions"></section>
+    <div class="show-more-wrap"><button class="button button-secondary show-more-button" id="show-more" type="button" data-i18n="showMore">Show more recipes</button></div>
     <div class="empty-plan" id="empty-plan" role="status"></div>
 
     <section class="shopping-list-section" aria-labelledby="shopping-title">
       <div class="shopping-heading">
         <div>
-          <h2 id="shopping-title">Shopping list</h2>
+          <h2 id="shopping-title" data-i18n="shoppingTitle">Shopping list</h2>
           <p id="shopping-subtitle">Ingredients from the recipes in your meal plan.</p>
         </div>
         <div class="shopping-actions">
-          <button class="button button-secondary" id="print-shopping-list" type="button">Print list</button>
+          <button class="button button-secondary" id="print-shopping-list" type="button" data-i18n="printList">Print list</button>
         </div>
       </div>
       <div class="budget-store-note" id="budget-store-note"></div>
       <ul class="shopping-items" id="shopping-items"></ul>
-      <p class="shopping-empty" id="shopping-empty">Add recipes to your meal plan and their ingredients will appear here.</p>
-      <div class="shopping-total" id="shopping-total" hidden><span>Estimated ingredients total</span><strong id="shopping-cost">₪0</strong></div>
+      <p class="shopping-empty" id="shopping-empty" data-i18n="shoppingEmpty">Add recipes to your meal plan and their ingredients will appear here.</p>
+      <div class="shopping-total" id="shopping-total" hidden><span data-i18n="estimatedTotal">Estimated ingredients total</span><strong id="shopping-cost">₪0</strong></div>
     </section>
 
-    <p class="footer-note"><strong>A note on prices:</strong> Ingredient costs are rough estimates in Israeli shekels for the amounts used in each recipe, not live supermarket prices. Store availability and prices vary by branch. The budget-store suggestion is not a live price comparison; check local prices before shopping. Recipe links open a web search so you can choose a version you like. No precise location is collected.</p>
+    <p class="footer-note"><strong data-i18n="priceNoteTitle">A note on prices:</strong> <span data-i18n="priceNote">Ingredient costs are rough estimates in Israeli shekels for the amounts used in each recipe, not live supermarket prices. Store availability and prices vary by branch. The budget-store suggestion is not a live price comparison; check local prices before shopping. Recipe links open a web search so you can choose a version you like. No precise location is collected.</span> <span data-i18n="translationNote">Recipe names and ingredient names are currently shown in English.</span></p>
   </main>
 
   <script>
     const stores = ["Rami Levy", "Shufersal", "Carrefour", "Victory", "Yohananof"];
+    const translations = {
+      en: {
+        languageLabel: "Language", documentTitle: "FoodShopping Platewise | Budget Meal Planner for Israel",
+        topNote: "A little more joy in your grocery budget", eyebrow: "Your Israeli meal planner",
+        budgetWord: "Budget", planTotal: "₪{amount} planned",
+        heroTitle: "Eat well. Spend wisely.", heroCopy: "Tell us roughly where you are and what you want to spend. We’ll help you find recipes and track down the ingredients nearby.",
+        stamp: "Good food<br>starts here", plannerLabel: "Meal plan details", cityLabel: "Where in Israel?", budgetLabel: "Your food budget",
+        periodLabel: "For how long?", oneDay: "One day", oneWeek: "One week", peopleLabel: "People to feed",
+        peopleHint: "Recipes start at 2 servings.", plannedTitle: "Your meal plan", addRecipe: "+ Add recipe",
+        plannedEmpty: "Add a recipe below and it will appear here.", pickerTitle: "Add a recipe",
+        pickerCopy: "Search all recipes and add one straight to your plan.", close: "Close",
+        searchPlaceholder: "Search recipes or ingredients…", searchRecipes: "Search recipes or ingredients",
+        filterCategories: "Filter recipes by category", allCategories: "All categories",
+        popularStores: "Popular stores near", openMapSearch: "open a map search", storesLabel: "Supermarkets near your selected city",
+        recipesTitle: "Recipes that fit real life", recipeSubtitle: "Choose up to {limit} meals to build your {period} plan. Each recipe serves about {people}.",
+        showMore: "Show more recipes", recipeSuggestions: "Recipe suggestions", shoppingTitle: "Shopping list",
+        shoppingEmpty: "Add recipes to your meal plan and their ingredients will appear here.", printList: "Print list",
+        estimatedTotal: "Estimated ingredients total", priceNoteTitle: "A note on prices:",
+        priceNote: "Ingredient costs are rough estimates in Israeli shekels for the amounts used in each recipe, not live supermarket prices. Store availability and prices vary by branch. The budget-store suggestion is not a live price comparison; check local prices before shopping. Recipe links open a web search so you can choose a version you like. No precise location is collected.",
+        translationNote: "Recipe names and ingredient names are currently shown in English.",
+        cityTelAviv: "Tel Aviv", cityJerusalem: "Jerusalem", cityHaifa: "Haifa", cityBeersheba: "Beersheba",
+        cityNetanya: "Netanya", cityRishon: "Rishon LeZion", cityPetahTikva: "Petah Tikva", cityAshdod: "Ashdod",
+        cityOther: "Other location in Israel", servings: "{count} servings", minutes: "{count} min", ingredientEstimates: "Ingredients · estimated cost",
+        find: "Find ↗", recipe: "Recipe ↗", planFull: "Plan is full", addToPlan: "+ Add to plan", meal: "meal", meals: "meals",
+        plannedCount: "{count} {unit} selected", serves: "serves {count}", remove: "Remove",
+        planSummary: "{count} of {limit} meals · {remainder}", left: "₪{amount} left", over: "₪{amount} over budget",
+        overBudgetMessage: "Your plan is ₪{amount} over budget. Try fewer meals or choose lower-cost recipes.",
+        planFullMessage: "Your {period} plan is full ({count} meals). Remove a meal or change the plan length to add another.",
+        pickerFullMessage: "Your plan is full ({count} of {limit} meals). Remove a meal or change the plan length to add another.",
+        recipesFound: "{count} recipes found · {slots} {unit} left", slot: "meal slot", slots: "meal slots",
+        recipeAdded: "{name} added. {count} of {limit} meals selected.", showing: "Showing {shown} of {total} recipes",
+        shoppingSubtitle: "{count} ingredients for {meals} planned meals · serving {people}.",
+        shoppingEmptySubtitle: "Ingredients from the recipes in your meal plan.",
+        budgetStore: "<strong>Budget-first store to check: {store}</strong> near {city}. This is a general suggestion, not a live comparison—prices vary by branch. Compare nearby stores before you go.",
+        usedIn: "used in {count} recipes", usedInOne: "used in 1 recipe", estimatedShare: "Estimated share: ~₪{cost}",
+        findAt: "Find at {store} ↗", compareStores: "Compare stores ↗", markPurchased: "Mark {name} as purchased",
+        noRecipeResults: "No recipes match. Try another search or category."
+      },
+      he: {
+        languageLabel: "שפה", documentTitle: "פודשופינג פלייטווייז | תכנון ארוחות בישראל",
+        topNote: "קצת יותר שמחה בתקציב הקניות שלך", eyebrow: "מתכנן הארוחות שלך בישראל",
+        budgetWord: "תקציב", planTotal: "₪{amount} בתכנון",
+        heroTitle: "אוכלים טוב. חוסכים בחוכמה.", heroCopy: "בחרו אזור מגורים ותקציב, ונעזור לכם למצוא מתכונים ולחפש את המצרכים בחנויות באזור.",
+        stamp: "אוכל טוב<br>מתחיל כאן", plannerLabel: "פרטי תכנון הארוחות", cityLabel: "איפה בישראל?", budgetLabel: "תקציב האוכל",
+        periodLabel: "לאיזו תקופה?", oneDay: "יום אחד", oneWeek: "שבוע אחד", peopleLabel: "לכמה אנשים?",
+        peopleHint: "המתכונים מחושבים במקור ל־2 מנות.", plannedTitle: "תוכנית הארוחות שלך", addRecipe: "+ הוספת מתכון",
+        plannedEmpty: "הוסיפו מתכון והוא יופיע כאן.", pickerTitle: "הוספת מתכון",
+        pickerCopy: "חפשו בין המתכונים והוסיפו אחד ישירות לתוכנית.", close: "סגירה",
+        searchPlaceholder: "חיפוש מתכון או מצרך…", searchRecipes: "חיפוש מתכון או מצרך",
+        filterCategories: "סינון מתכונים לפי קטגוריה", allCategories: "כל הקטגוריות",
+        popularStores: "חנויות פופולריות ליד", openMapSearch: "פתיחת חיפוש במפה", storesLabel: "סופרמרקטים ליד העיר שנבחרה",
+        recipesTitle: "מתכונים שמתאימים לחיי היומיום", recipeSubtitle: "בחרו עד {limit} ארוחות לתוכנית ה{period}. כל מתכון מתאים לכ־{people} סועדים.",
+        showMore: "הצגת מתכונים נוספים", recipeSuggestions: "הצעות למתכונים", shoppingTitle: "רשימת קניות",
+        shoppingEmpty: "הוסיפו מתכונים לתוכנית ורכיביהם יופיעו כאן.", printList: "הדפסת הרשימה",
+        estimatedTotal: "עלות מצרכים משוערת", priceNoteTitle: "הערה לגבי המחירים:",
+        priceNote: "מחירי המצרכים הם הערכות גסות בשקלים עבור הכמויות שבמתכון, ולא מחירי סופר בזמן אמת. זמינות ומחירים משתנים בין סניפים. ההמלצה לחנות מוזלת אינה השוואת מחירים בזמן אמת; כדאי לבדוק מחירים מקומיים לפני הקנייה. קישורי המתכונים פותחים חיפוש באינטרנט. לא נאסף מיקום מדויק.",
+        translationNote: "שמות המתכונים והמצרכים מוצגים כרגע באנגלית.",
+        cityTelAviv: "תל אביב", cityJerusalem: "ירושלים", cityHaifa: "חיפה", cityBeersheba: "באר שבע",
+        cityNetanya: "נתניה", cityRishon: "ראשון לציון", cityPetahTikva: "פתח תקווה", cityAshdod: "אשדוד",
+        cityOther: "מקום אחר בישראל", servings: "{count} מנות", minutes: "{count} דקות", ingredientEstimates: "מצרכים · עלות משוערת",
+        find: "חיפוש ↗", recipe: "מתכון ↗", planFull: "התוכנית מלאה", addToPlan: "+ הוספה לתוכנית", meal: "ארוחה", meals: "ארוחות",
+        plannedCount: "{count} {unit} נבחרו", serves: "ל־{count} סועדים", remove: "הסרה",
+        planSummary: "{count} מתוך {limit} ארוחות · {remainder}", left: "נותרו ₪{amount}", over: "חריגה של ₪{amount}",
+        overBudgetMessage: "התוכנית חורגת מהתקציב ב־₪{amount}. נסו לבחור פחות ארוחות או מתכונים זולים יותר.",
+        planFullMessage: "התוכנית ל{period} מלאה ({count} ארוחות). הסירו ארוחה או שנו את התקופה כדי להוסיף.",
+        pickerFullMessage: "התוכנית מלאה ({count} מתוך {limit} ארוחות). הסירו ארוחה או שנו את התקופה כדי להוסיף.",
+        recipesFound: "נמצאו {count} מתכונים · נותרו {slots} {unit}", slot: "מקום לארוחה", slots: "מקומות לארוחות",
+        recipeAdded: "{name} נוסף. נבחרו {count} מתוך {limit} ארוחות.", showing: "מוצגים {shown} מתוך {total} מתכונים",
+        shoppingSubtitle: "{count} מצרכים עבור {meals} ארוחות בתוכנית · עבור {people} סועדים.",
+        shoppingEmptySubtitle: "המצרכים מהמתכונים שבתוכנית יופיעו כאן.",
+        budgetStore: "<strong>חנות מוזלת שכדאי לבדוק: {store}</strong> באזור {city}. זו המלצה כללית ולא השוואה בזמן אמת — המחירים משתנים בין סניפים. כדאי להשוות חנויות באזור.",
+        usedIn: "משמש ב־{count} מתכונים", usedInOne: "משמש במתכון אחד", estimatedShare: "עלות משוערת: ~₪{cost}",
+        findAt: "חיפוש ב־{store} ↗", compareStores: "השוואת חנויות ↗", markPurchased: "סימון {name} כפריט שנקנה",
+        noRecipeResults: "לא נמצאו מתכונים. נסו חיפוש או קטגוריה אחרת."
+      },
+      ar: {
+        languageLabel: "اللغة", documentTitle: "FoodShopping Platewise | مخطط الوجبات",
+        topNote: "متعة أكثر بقليل ضمن ميزانية مشترياتك", eyebrow: "مخطط وجباتك في إسرائيل",
+        budgetWord: "الميزانية", planTotal: "₪{amount} مخطط",
+        heroTitle: "تناول طعامًا جيدًا. وأنفق بحكمة.", heroCopy: "اختر منطقتك وميزانيتك، وسنساعدك في العثور على وصفات ومكونات قريبة منك.",
+        stamp: "الطعام الجيد<br>يبدأ من هنا", plannerLabel: "تفاصيل خطة الوجبات", cityLabel: "أين في إسرائيل؟", budgetLabel: "ميزانية الطعام",
+        periodLabel: "لأي مدة؟", oneDay: "يوم واحد", oneWeek: "أسبوع واحد", peopleLabel: "عدد الأشخاص",
+        peopleHint: "الوصفات محسوبة أساسًا لحصتين.", plannedTitle: "خطة وجباتك", addRecipe: "+ أضف وصفة",
+        plannedEmpty: "أضف وصفة وستظهر هنا.", pickerTitle: "أضف وصفة",
+        pickerCopy: "ابحث في الوصفات وأضف واحدة مباشرة إلى خطتك.", close: "إغلاق",
+        searchPlaceholder: "ابحث عن وصفة أو مكوّن…", searchRecipes: "ابحث عن وصفة أو مكوّن",
+        filterCategories: "تصفية الوصفات حسب الفئة", allCategories: "كل الفئات",
+        popularStores: "متاجر شائعة بالقرب من", openMapSearch: "افتح بحث الخرائط", storesLabel: "متاجر قرب المدينة المحددة",
+        recipesTitle: "وصفات تناسب الحياة اليومية", recipeSubtitle: "اختر حتى {limit} وجبات لخطة {period}. كل وصفة تكفي {people} أشخاص تقريبًا.",
+        showMore: "عرض المزيد من الوصفات", recipeSuggestions: "اقتراحات الوصفات", shoppingTitle: "قائمة التسوق",
+        shoppingEmpty: "أضف وصفات إلى خطتك لتظهر مكوناتها هنا.", printList: "اطبع القائمة",
+        estimatedTotal: "التكلفة التقديرية للمكونات", priceNoteTitle: "ملاحظة حول الأسعار:",
+        priceNote: "تكاليف المكونات تقديرية بالشيكل الإسرائيلي للكميات المستخدمة، وليست أسعارًا مباشرة من المتاجر. يختلف التوفر والسعر بين الفروع. اقتراح المتجر الاقتصادي ليس مقارنة مباشرة للأسعار؛ تحقق من الأسعار المحلية قبل التسوق. روابط الوصفات تفتح بحثًا على الإنترنت. لا يتم جمع موقع دقيق.",
+        translationNote: "أسماء الوصفات والمكونات معروضة حاليًا باللغة الإنجليزية.",
+        cityTelAviv: "تل أبيب", cityJerusalem: "القدس", cityHaifa: "حيفا", cityBeersheba: "بئر السبع",
+        cityNetanya: "نتانيا", cityRishon: "ريشون لتسيون", cityPetahTikva: "بيتاح تكفا", cityAshdod: "أشدود",
+        cityOther: "موقع آخر في إسرائيل", servings: "{count} حصص", minutes: "{count} دقيقة", ingredientEstimates: "المكونات · التكلفة التقديرية",
+        find: "ابحث ↗", recipe: "الوصفة ↗", planFull: "الخطة مكتملة", addToPlan: "+ أضف إلى الخطة", meal: "وجبة", meals: "وجبات",
+        plannedCount: "تم اختيار {count} {unit}", serves: "تكفي {count} أشخاص", remove: "إزالة",
+        planSummary: "{count} من {limit} وجبات · {remainder}", left: "متبقٍ ₪{amount}", over: "تجاوزت الميزانية بـ ₪{amount}",
+        overBudgetMessage: "تتجاوز خطتك الميزانية بمقدار ₪{amount}. جرّب وجبات أقل أو وصفات أقل تكلفة.",
+        planFullMessage: "خطة {period} مكتملة ({count} وجبات). أزل وجبة أو غيّر مدة الخطة لإضافة وجبة أخرى.",
+        pickerFullMessage: "الخطة مكتملة ({count} من {limit} وجبات). أزل وجبة أو غيّر مدة الخطة للإضافة.",
+        recipesFound: "تم العثور على {count} وصفة · تبقى {slots} {unit}", slot: "مكان وجبة", slots: "أماكن وجبات",
+        recipeAdded: "تمت إضافة {name}. تم اختيار {count} من {limit} وجبات.", showing: "عرض {shown} من أصل {total} وصفة",
+        shoppingSubtitle: "{count} مكوّنات لـ {meals} وجبات مخططة · تكفي {people} أشخاص.",
+        shoppingEmptySubtitle: "ستظهر هنا مكونات الوصفات في خطتك.",
+        budgetStore: "<strong>متجر اقتصادي للتحقق منه: {store}</strong> بالقرب من {city}. هذا اقتراح عام وليس مقارنة مباشرة؛ تختلف الأسعار بين الفروع. قارن الأسعار محليًا.",
+        usedIn: "يُستخدم في {count} وصفات", usedInOne: "يُستخدم في وصفة واحدة", estimatedShare: "الحصة التقديرية: ~₪{cost}",
+        findAt: "ابحث في {store} ↗", compareStores: "قارن المتاجر ↗", markPurchased: "ضع علامة شراء على {name}",
+        noRecipeResults: "لا توجد وصفات مطابقة. جرّب بحثًا أو فئة أخرى."
+      }
+    };
+    const categoryTranslations = {
+      "Breakfast": { he: "ארוחת בוקר", ar: "الفطور" }, "Chicken": { he: "עוף", ar: "دجاج" },
+      "Dessert": { he: "קינוח", ar: "حلويات" }, "Desserts": { he: "קינוחים", ar: "حلويات" },
+      "Dinner": { he: "ארוחת ערב", ar: "العشاء" }, "Israeli-inspired": { he: "בהשראה ישראלית", ar: "مستوحى من المطبخ الإسرائيلي" },
+      "Lunch": { he: "ארוחת צהריים", ar: "الغداء" }, "One-pan meals": { he: "ארוחה בסיר אחד", ar: "وجبات بوعاء واحد" },
+      "Pasta": { he: "פסטה", ar: "معكرونة" }, "Pescatarian": { he: "דגים", ar: "أسماك" },
+      "Quick & easy": { he: "מהיר וקל", ar: "سريع وسهل" }, "Rice dishes": { he: "מנות אורז", ar: "أطباق الأرز" },
+      "Salads": { he: "סלטים", ar: "سلطات" }, "Soups": { he: "מרקים", ar: "شوربات" },
+      "Sweet treats": { he: "מתוקים", ar: "حلويات" }, "Under ₪25": { he: "עד 25 ₪", ar: "أقل من ₪25" },
+      "Vegan": { he: "טבעוני", ar: "نباتي صرف" }, "Vegetarian": { he: "צמחוני", ar: "نباتي" },
+      "Grilling": { he: "על האש", ar: "مشاوي" }
+    };
+    const languageSelect = document.getElementById("language");
+    let currentLanguage = localStorage.getItem("platewise-language") || "en";
+    if (!translations[currentLanguage]) currentLanguage = "en";
+    languageSelect.value = currentLanguage;
+
+    function t(key, values = {}) {
+      let text = translations[currentLanguage][key] || translations.en[key] || key;
+      Object.entries(values).forEach(([name, value]) => {
+        text = text.replaceAll(`{${name}}`, String(value));
+      });
+      return text;
+    }
+
+    function categoryLabel(category) {
+      return categoryTranslations[category]?.[currentLanguage] || category;
+    }
+
     const recipes = [
       {
         id: "shakshuka", name: "Easy tomato shakshuka", emoji: "🍳", color: "#f4e3ce",
@@ -1368,14 +1527,44 @@
     [...new Set(recipes.flatMap(recipe => recipe.categories))].sort().forEach(category => {
       const option = document.createElement("option");
       option.value = category;
-      option.textContent = category;
+      option.textContent = categoryLabel(category);
       categoryFilter.append(option);
 
       const pickerOption = document.createElement("option");
       pickerOption.value = category;
-      pickerOption.textContent = category;
+      pickerOption.textContent = categoryLabel(category);
       pickerCategory.append(pickerOption);
     });
+
+    function applyLanguage() {
+      currentLanguage = languageSelect.value;
+      localStorage.setItem("platewise-language", currentLanguage);
+      document.documentElement.lang = currentLanguage;
+      document.documentElement.dir = currentLanguage === "en" ? "ltr" : "rtl";
+      document.title = t("documentTitle");
+      document.querySelectorAll("[data-i18n]").forEach(element => {
+        const key = element.dataset.i18n;
+        if (key === "stamp") element.innerHTML = t(key);
+        else element.textContent = t(key);
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+        element.placeholder = t(element.dataset.i18nPlaceholder);
+      });
+      document.querySelectorAll("[data-i18n-aria]").forEach(element => {
+        element.setAttribute("aria-label", t(element.dataset.i18nAria));
+      });
+      document.querySelectorAll("#city option[data-i18n]").forEach(option => {
+        option.textContent = t(option.dataset.i18n);
+      });
+      [categoryFilter, pickerCategory].forEach(select => {
+        [...select.options].forEach(option => {
+          if (option.value) option.textContent = categoryLabel(option.value);
+          else option.textContent = t("allCategories");
+        });
+      });
+      renderStores();
+      updatePlan();
+    }
 
     function searchUrl(query) {
       return "https://www.google.com/search?q=" + encodeURIComponent(query);
@@ -1403,7 +1592,7 @@
 
     function renderStores() {
       const city = citySelect.value;
-      document.getElementById("city-label").textContent = city;
+      document.getElementById("city-label").textContent = citySelect.selectedOptions[0].textContent;
       document.getElementById("store-options").innerHTML = stores.map(store =>
         `<a class="store-chip" href="${searchUrl(store + " supermarket " + city + " Israel")}" target="_blank" rel="noopener noreferrer">${store} ↗</a>`
       ).join("");
@@ -1443,25 +1632,25 @@
       const shoppingItems = document.getElementById("shopping-items");
       const budgetStore = "Rami Levy";
       document.getElementById("shopping-subtitle").textContent = plan.length
-        ? `${items.size} ingredients for ${plan.length} planned ${plan.length === 1 ? "meal" : "meals"} · serving ${peopleCount()}.`
-        : "Ingredients from the recipes in your meal plan.";
+        ? t("shoppingSubtitle", { count: items.size, meals: plan.length, people: peopleCount() })
+        : t("shoppingEmptySubtitle");
       document.getElementById("budget-store-note").innerHTML =
-        `<strong>Budget-first store to check: ${budgetStore}</strong> near ${citySelect.value}. This is a general suggestion, not a live comparison—prices vary by branch. Compare nearby stores before you go.`;
+        t("budgetStore", { store: budgetStore, city: document.getElementById("city-label").textContent });
 
-      shoppingItems.innerHTML = [...items.entries()].map(([key, item]) => `
+      shoppingItems.innerHTML = [...items.entries()].map(([, item]) => `
         <li class="shopping-item">
           <label class="shopping-item-main">
-            <input type="checkbox" aria-label="Mark ${item.name} as purchased">
+            <input type="checkbox" aria-label="${t("markPurchased", { name: item.name })}">
             <span>
               <span class="shopping-item-name">${item.name}</span>
-              <span class="shopping-item-quantity">${item.quantities.join(" + ")} · used in ${item.recipes} ${item.recipes === 1 ? "recipe" : "recipes"}</span>
+              <span class="shopping-item-quantity">${item.quantities.join(" + ")} · ${item.recipes === 1 ? t("usedInOne") : t("usedIn", { count: item.recipes })}</span>
             </span>
           </label>
           <div class="shopping-item-links">
-            <a href="${searchUrl(`${item.name} ${budgetStore} ${citySelect.value} Israel`)}" target="_blank" rel="noopener noreferrer">Find at ${budgetStore} ↗</a>
-            <a href="${searchUrl(`${item.name} supermarket ${citySelect.value} Israel price`)}" target="_blank" rel="noopener noreferrer">Compare stores ↗</a>
+            <a href="${searchUrl(`${item.name} ${budgetStore} ${citySelect.value} Israel`)}" target="_blank" rel="noopener noreferrer">${t("findAt", { store: budgetStore })}</a>
+            <a href="${searchUrl(`${item.name} supermarket ${citySelect.value} Israel price`)}" target="_blank" rel="noopener noreferrer">${t("compareStores")}</a>
           </div>
-          <span class="shopping-item-cost">Estimated share: ~₪${Number(item.cost.toFixed(2))}</span>
+          <span class="shopping-item-cost">${t("estimatedShare", { cost: Number(item.cost.toFixed(2)) })}</span>
         </li>
       `).join("");
 
@@ -1477,12 +1666,12 @@
       const selectedCategory = categoryFilter.value;
       const filteredRecipes = filterRecipes(query, selectedCategory);
       const shownRecipes = filteredRecipes.slice(0, visibleRecipeCount);
-      recipeCount.textContent = `Showing ${shownRecipes.length} of ${filteredRecipes.length} recipes`;
+      recipeCount.textContent = t("showing", { shown: shownRecipes.length, total: filteredRecipes.length });
       showMoreButton.parentElement.hidden = shownRecipes.length >= filteredRecipes.length;
       grid.innerHTML = shownRecipes.map(recipe => {
         const ingredientRows = recipe.ingredients.map(([name, price]) => {
           const scaledName = scaleIngredient(name);
-          return `<li><span>${scaledName} · ~₪${scaledCost(price)}</span><a href="${searchUrl(name + " " + stores[0] + " " + city + " Israel")}" target="_blank" rel="noopener noreferrer" aria-label="Search ${name} at ${stores[0]} near ${city}">Find ↗</a></li>`;
+          return `<li><span>${scaledName} · ~₪${scaledCost(price)}</span><a href="${searchUrl(name + " " + stores[0] + " " + city + " Israel")}" target="_blank" rel="noopener noreferrer" aria-label="${t("findAt", { store: stores[0] })} ${name}"> ${t("find")}</a></li>`;
         }
         ).join("");
         const fullCount = plan.length >= mealLimit();
@@ -1494,13 +1683,13 @@
             </div>
             <div class="recipe-content">
               <div class="recipe-title-line"><h3>${recipe.name}</h3><span class="recipe-price">~₪${scaledCost(recipe.cost)}</span></div>
-              <div class="recipe-meta"><span>◷ ${recipe.time} min</span><span>${recipe.category}</span><span>${peopleCount()} servings</span></div>
+              <div class="recipe-meta"><span>◷ ${t("minutes", { count: recipe.time })}</span><span>${categoryLabel(recipe.category)}</span><span>${t("servings", { count: peopleCount() })}</span></div>
               <p class="recipe-description">${recipe.description}</p>
-              <p class="ingredient-heading">Ingredients · estimated cost</p>
+              <p class="ingredient-heading">${t("ingredientEstimates")}</p>
               <ul class="ingredient-list">${ingredientRows}</ul>
               <div class="card-actions">
-                <button class="button button-primary" type="button" data-add="${recipe.id}" ${fullCount ? "disabled" : ""}>${fullCount ? "Plan is full" : "+ Add to plan"}</button>
-                <a class="button button-secondary recipe-link" href="${searchUrl(recipe.name + " recipe")}" target="_blank" rel="noopener noreferrer">Recipe ↗</a>
+                <button class="button button-primary" type="button" data-add="${recipe.id}" ${fullCount ? "disabled" : ""}>${fullCount ? t("planFull") : t("addToPlan")}</button>
+                <a class="button button-secondary recipe-link" href="${searchUrl(recipe.name + " recipe")}" target="_blank" rel="noopener noreferrer">${t("recipe")}</a>
               </div>
             </div>
           </article>`;
@@ -1514,14 +1703,17 @@
 
     function filterRecipes(query, category) {
       return recipes.filter(recipe => {
-        const searchableText = `${recipe.name} ${recipe.category} ${recipe.categories.join(" ")} ${recipe.tag} ${recipe.ingredients.map(([name]) => name).join(" ")}`.toLowerCase();
+          const searchableText = `${recipe.name} ${recipe.category} ${recipe.categories.join(" ")} ${recipe.tag} ${recipe.ingredients.map(([name]) => name).join(" ")}`.toLowerCase();
         return (!category || recipe.categories.includes(category)) && (!query || searchableText.includes(query));
       });
     }
 
     function addRecipeToPlan(recipeId) {
       if (plan.length >= mealLimit()) {
-        pickerStatus.textContent = `Your ${periodSelect.value} plan is full (${mealLimit()} meals). Remove a meal or change the plan length to add another.`;
+        pickerStatus.textContent = t("planFullMessage", {
+          period: periodSelect.value === "day" ? t("oneDay") : t("oneWeek"),
+          count: mealLimit()
+        });
         return;
       }
       const recipe = recipes.find(item => item.id === recipeId);
@@ -1529,24 +1721,28 @@
       plan.push(recipe);
       updatePlan();
       if (recipePicker.open) {
-        pickerStatus.textContent = `${recipe.name} added. ${plan.length} of ${mealLimit()} meals selected.`;
+        pickerStatus.textContent = t("recipeAdded", { name: recipe.name, count: plan.length, limit: mealLimit() });
       }
     }
 
     function renderRecipePicker() {
       const matches = filterRecipes(pickerSearch.value.trim().toLowerCase(), pickerCategory.value);
       pickerStatus.textContent = plan.length >= mealLimit()
-        ? `Your plan is full (${plan.length} of ${mealLimit()} meals). Remove a meal or change the plan length to add another.`
-        : `${matches.length} recipes found · ${mealLimit() - plan.length} ${mealLimit() - plan.length === 1 ? "meal slot" : "meal slots"} left`;
+        ? t("pickerFullMessage", { count: plan.length, limit: mealLimit() })
+        : t("recipesFound", {
+          count: matches.length,
+          slots: mealLimit() - plan.length,
+          unit: mealLimit() - plan.length === 1 ? t("slot") : t("slots")
+        });
       pickerResults.innerHTML = matches.map(recipe => {
         const isFull = plan.length >= mealLimit();
         return `
           <div class="picker-result">
             <div class="picker-result-info">
               <strong>${recipe.emoji} ${recipe.name}</strong>
-              <span>${recipe.categories.slice(0, 3).join(" · ")} · ${recipe.time} min · about ₪${scaledCost(recipe.cost)} · ${peopleCount()} servings</span>
+              <span>${recipe.categories.slice(0, 3).map(categoryLabel).join(" · ")} · ${t("minutes", { count: recipe.time })} · ~₪${scaledCost(recipe.cost)} · ${t("servings", { count: peopleCount() })}</span>
             </div>
-            <button class="button button-primary" type="button" data-picker-add="${recipe.id}" ${isFull ? "disabled" : ""}>Add</button>
+            <button class="button button-primary" type="button" data-picker-add="${recipe.id}" ${isFull ? "disabled" : ""}>${t("addToPlan")}</button>
           </div>`;
       }).join("");
       pickerResults.querySelectorAll("[data-picker-add]").forEach(button => {
@@ -1574,18 +1770,20 @@
 
     function renderPlannedMeals() {
       const list = document.getElementById("planned-list");
-      document.getElementById("planned-count").textContent =
-        `${plan.length} ${plan.length === 1 ? "meal" : "meals"} selected`;
+      document.getElementById("planned-count").textContent = t("plannedCount", {
+        count: plan.length,
+        unit: plan.length === 1 ? t("meal") : t("meals")
+      });
       document.getElementById("planned-empty").hidden = plan.length > 0;
       list.innerHTML = plan.map((recipe, index) => `
         <li class="planned-item">
           <div class="planned-item-info">
             <strong>${recipe.emoji} ${recipe.name}</strong>
-            <span>${recipe.time} min · serves ${peopleCount()}</span>
+            <span>${t("minutes", { count: recipe.time })} · ${t("serves", { count: peopleCount() })}</span>
           </div>
           <div class="planned-item-end">
             <strong>~₪${scaledCost(recipe.cost)}</strong>
-            <button class="remove-meal" type="button" data-remove="${index}" aria-label="Remove ${recipe.name} from your plan">Remove</button>
+            <button class="remove-meal" type="button" data-remove="${index}" aria-label="${t("remove")} ${recipe.name}">${t("remove")}</button>
           </div>
         </li>
       `).join("");
@@ -1601,17 +1799,25 @@
       const total = plan.reduce((sum, recipe) => sum + scaledCost(recipe.cost), 0);
       const budget = Math.max(0, Number(budgetInput.value) || 0);
       const remaining = budget - total;
-      const periodName = periodSelect.value === "day" ? "day" : "week";
-      document.getElementById("plan-total").textContent = `₪${Number(total.toFixed(2))} planned`;
-      document.getElementById("plan-subtitle").textContent =
-        `${plan.length} of ${mealLimit()} meals · ${remaining >= 0 ? `₪${Number(remaining.toFixed(2))} left` : `₪${Number(Math.abs(remaining).toFixed(2))} over budget`}`;
+      const periodName = periodSelect.value === "day" ? t("oneDay") : t("oneWeek");
+      document.getElementById("plan-total").textContent = t("planTotal", { amount: Number(total.toFixed(2)) });
+      document.getElementById("plan-subtitle").textContent = t("planSummary", {
+        count: plan.length,
+        limit: mealLimit(),
+        remainder: remaining >= 0
+          ? t("left", { amount: Number(remaining.toFixed(2)) })
+          : t("over", { amount: Number(Math.abs(remaining).toFixed(2)) })
+      });
       document.getElementById("budget-label").textContent = `₪${budget} / ${periodName}`;
-      document.getElementById("recipe-subtitle").textContent =
-        `Choose up to ${mealLimit()} meals to build your ${periodName} plan. Each recipe serves about 2.`;
+      document.getElementById("recipe-subtitle").textContent = t("recipeSubtitle", {
+        limit: mealLimit(),
+        period: periodName,
+        people: peopleCount()
+      });
       const emptyPlan = document.getElementById("empty-plan");
       emptyPlan.classList.toggle("visible", remaining < 0);
       emptyPlan.textContent = remaining < 0
-        ? `Your plan is ₪${Number(Math.abs(remaining).toFixed(2))} over budget. Try fewer meals or choose lower-cost recipes.`
+        ? t("overBudgetMessage", { amount: Number(Math.abs(remaining).toFixed(2)) })
         : "";
       renderPlannedMeals();
       renderShoppingList();
@@ -1641,9 +1847,9 @@
     });
     citySelect.addEventListener("change", renderShoppingList);
     document.getElementById("print-shopping-list").addEventListener("click", () => window.print());
+    languageSelect.addEventListener("change", applyLanguage);
 
-    renderStores();
-    updatePlan();
+    applyLanguage();
   </script>
 </body>
 </html>
