@@ -221,6 +221,9 @@
     .planned-heading span, .planned-empty { color: var(--muted); font-size: 12px; }
     .planned-heading-actions { display: flex; align-items: center; gap: 10px; }
     .planned-add-button { min-height: 34px; flex: 0 0 auto; padding: 0 12px; }
+    .planned-share-button { min-height: 34px; flex: 0 0 auto; padding: 0 12px; }
+    .planned-share-button:disabled { opacity: .55; cursor: not-allowed; }
+    .planned-share-status { margin: 0 0 8px; color: var(--muted); font-size: 12px; }
     .planned-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
 
     .recipe-picker {
@@ -667,9 +670,11 @@
         <h2 id="planned-title" data-i18n="plannedTitle">Your meal plan</h2>
         <div class="planned-heading-actions">
           <span id="planned-count">0 meals selected</span>
+          <button class="button button-secondary planned-share-button" id="share-plan" type="button" disabled data-i18n="sharePlan">Share meal plan</button>
           <button class="button button-secondary planned-add-button" id="open-picker" type="button" data-i18n="addRecipe">+ Add recipe</button>
         </div>
       </div>
+      <p class="planned-share-status" id="share-status" role="status" aria-live="polite" hidden></p>
       <p class="planned-empty" id="planned-empty" data-i18n="plannedEmpty">Add a recipe below and it will appear here.</p>
       <ul class="planned-list" id="planned-list"></ul>
     </section>
@@ -746,6 +751,8 @@
         stamp: "Good food<br>starts here", plannerLabel: "Meal plan details", cityLabel: "Where in Israel?", budgetLabel: "Your food budget",
         periodLabel: "For how long?", oneDay: "One day", oneWeek: "One week", peopleLabel: "People to feed",
         peopleHint: "Recipes start at 2 servings.", plannedTitle: "Your meal plan", addRecipe: "+ Add recipe",
+        sharePlan: "Share meal plan", shareReady: "Your meal plan is ready to share.",
+        planCopied: "Meal plan copied. Paste it into a message to share.", shareFailed: "Could not share the meal plan. Please try again.",
         plannedEmpty: "Add a recipe below and it will appear here.", pickerTitle: "Add a recipe",
         pickerCopy: "Search all recipes and add one straight to your plan.", close: "Close",
         searchPlaceholder: "Search recipes or ingredients…", searchRecipes: "Search recipes or ingredients",
@@ -783,6 +790,8 @@
         stamp: "אוכל טוב<br>מתחיל כאן", plannerLabel: "פרטי תכנון הארוחות", cityLabel: "איפה בישראל?", budgetLabel: "תקציב האוכל",
         periodLabel: "לאיזו תקופה?", oneDay: "יום אחד", oneWeek: "שבוע אחד", peopleLabel: "לכמה אנשים?",
         peopleHint: "המתכונים מחושבים במקור ל־2 מנות.", plannedTitle: "תוכנית הארוחות שלך", addRecipe: "+ הוספת מתכון",
+        sharePlan: "שיתוף תוכנית הארוחות", shareReady: "תוכנית הארוחות מוכנה לשיתוף.",
+        planCopied: "תוכנית הארוחות הועתקה. אפשר להדביק אותה בהודעה ולשתף.", shareFailed: "לא ניתן לשתף את תוכנית הארוחות. נסו שוב.",
         plannedEmpty: "הוסיפו מתכון והוא יופיע כאן.", pickerTitle: "הוספת מתכון",
         pickerCopy: "חפשו בין המתכונים והוסיפו אחד ישירות לתוכנית.", close: "סגירה",
         searchPlaceholder: "חיפוש מתכון או מצרך…", searchRecipes: "חיפוש מתכון או מצרך",
@@ -820,6 +829,8 @@
         stamp: "الطعام الجيد<br>يبدأ من هنا", plannerLabel: "تفاصيل خطة الوجبات", cityLabel: "أين في إسرائيل؟", budgetLabel: "ميزانية الطعام",
         periodLabel: "لأي مدة؟", oneDay: "يوم واحد", oneWeek: "أسبوع واحد", peopleLabel: "عدد الأشخاص",
         peopleHint: "الوصفات محسوبة أساسًا لحصتين.", plannedTitle: "خطة وجباتك", addRecipe: "+ أضف وصفة",
+        sharePlan: "شارك خطة الوجبات", shareReady: "خطة الوجبات جاهزة للمشاركة.",
+        planCopied: "تم نسخ خطة الوجبات. الصقها في رسالة لمشاركتها.", shareFailed: "تعذّرت مشاركة خطة الوجبات. حاول مرة أخرى.",
         plannedEmpty: "أضف وصفة وستظهر هنا.", pickerTitle: "أضف وصفة",
         pickerCopy: "ابحث في الوصفات وأضف واحدة مباشرة إلى خطتك.", close: "إغلاق",
         searchPlaceholder: "ابحث عن وصفة أو مكوّن…", searchRecipes: "ابحث عن وصفة أو مكوّن",
@@ -1770,6 +1781,10 @@
 
     function renderPlannedMeals() {
       const list = document.getElementById("planned-list");
+      document.getElementById("share-plan").disabled = plan.length === 0;
+      const shareStatus = document.getElementById("share-status");
+      shareStatus.hidden = true;
+      shareStatus.textContent = "";
       document.getElementById("planned-count").textContent = t("plannedCount", {
         count: plan.length,
         unit: plan.length === 1 ? t("meal") : t("meals")
@@ -1847,6 +1862,26 @@
     });
     citySelect.addEventListener("change", renderShoppingList);
     document.getElementById("print-shopping-list").addEventListener("click", () => window.print());
+    document.getElementById("share-plan").addEventListener("click", async () => {
+      if (plan.length === 0) return;
+
+      const shareStatus = document.getElementById("share-status");
+      const message = `${t("plannedTitle")}\n${plan.map(recipe => `• ${recipe.name}`).join("\n")}`;
+      try {
+        if (typeof navigator.share === "function") {
+          await navigator.share({ title: t("plannedTitle"), text: message });
+          shareStatus.textContent = t("shareReady");
+        } else {
+          await navigator.clipboard.writeText(message);
+          shareStatus.textContent = t("planCopied");
+        }
+        shareStatus.hidden = false;
+      } catch (error) {
+        if (error && error.name === "AbortError") return;
+        shareStatus.textContent = t("shareFailed");
+        shareStatus.hidden = false;
+      }
+    });
     languageSelect.addEventListener("change", applyLanguage);
 
     applyLanguage();
