@@ -184,6 +184,55 @@
     .plan-summary strong { color: var(--green); font-size: 15px; }
     .plan-summary span { color: var(--muted); font-size: 11px; }
 
+    .planned-meals {
+      margin-top: 16px;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--paper);
+    }
+
+    .planned-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .planned-heading h2 { margin: 0; font-size: 17px; letter-spacing: -.3px; }
+    .planned-heading span, .planned-empty { color: var(--muted); font-size: 12px; }
+    .planned-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+
+    .planned-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .planned-item-info { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 10px; }
+    .planned-item-info strong { font-weight: 700; }
+    .planned-item-info span { color: var(--muted); font-size: 11px; }
+    .planned-item-end { display: flex; flex-shrink: 0; align-items: center; gap: 12px; }
+    .planned-item-end > strong { color: var(--green); font-size: 12px; }
+
+    .remove-meal {
+      padding: 4px 7px;
+      border: 1px solid #e6e8e1;
+      border-radius: 7px;
+      background: white;
+      color: #647168;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .remove-meal:hover { border-color: #d6aaa0; color: #9c4938; }
+    .planned-empty { margin: 0; }
+
     .store-bar {
       display: flex;
       align-items: center;
@@ -457,6 +506,15 @@
       </div>
     </section>
 
+    <section class="planned-meals" aria-labelledby="planned-title">
+      <div class="planned-heading">
+        <h2 id="planned-title">Your meal plan</h2>
+        <span id="planned-count">0 meals selected</span>
+      </div>
+      <p class="planned-empty" id="planned-empty">Add a recipe below and it will appear here.</p>
+      <ul class="planned-list" id="planned-list"></ul>
+    </section>
+
     <section class="store-bar" aria-label="Supermarkets near your selected city">
       <span><strong>Popular stores near <span id="city-label">Tel Aviv</span></strong> <span aria-hidden="true">·</span> open a map search</span>
       <div class="store-options" id="store-options"></div>
@@ -526,6 +584,54 @@
         tag: "Ready in 15 min", time: 15, category: "Vegetarian",
         description: "A quick, savory omelet with greens and a little salty feta.",
         ingredients: [["Eggs (3)", 6], ["Spinach", 8], ["Feta", 9], ["Tomatoes (2)", 5], ["Pita", 2]]
+      },
+      {
+        id: "bean-stew", name: "White bean & tomato stew", emoji: "🫘", color: "#eee5d7",
+        tag: "Pantry friendly", time: 30, category: "Vegan",
+        description: "A hearty tomatoey bean stew with garlic, herbs and crusty bread.",
+        ingredients: [["White beans (1 can)", 6], ["Crushed tomatoes", 6], ["Onion", 2], ["Garlic", 2], ["Bread", 6]]
+      },
+      {
+        id: "chicken-rice", name: "One-pan chicken & rice", emoji: "🍗", color: "#f0e2d2",
+        tag: "One-pan meal", time: 45, category: "Chicken",
+        description: "Comforting rice cooked with chicken, onion and gentle spices.",
+        ingredients: [["Chicken (300 g)", 18], ["Rice (200 g)", 4], ["Onion", 2], ["Carrots (2)", 3], ["Lemon", 2]]
+      },
+      {
+        id: "potato-yogurt", name: "Crispy potatoes with herby yogurt", emoji: "🥔", color: "#ece9d9",
+        tag: "Easy comfort food", time: 40, category: "Vegetarian",
+        description: "Oven-roasted potatoes served with cool, lemony herb yogurt.",
+        ingredients: [["Potatoes (4)", 7], ["Yogurt", 4], ["Cucumber", 3], ["Lemon", 2], ["Parsley", 3]]
+      },
+      {
+        id: "tuna-pasta", name: "Tuna & sweetcorn pasta", emoji: "🍝", color: "#f2e7d2",
+        tag: "Quick pantry meal", time: 20, category: "Pescatarian",
+        description: "A quick pasta with tuna, sweetcorn and a bright squeeze of lemon.",
+        ingredients: [["Pasta (250 g)", 5], ["Tuna (1 can)", 9], ["Sweetcorn (1 can)", 6], ["Lemon", 2], ["Yogurt", 4]]
+      },
+      {
+        id: "vegetable-fried-rice", name: "Easy vegetable fried rice", emoji: "🥢", color: "#e4ece0",
+        tag: "Use what you have", time: 20, category: "Vegetarian",
+        description: "A fast skillet of rice and vegetables bound with a simple egg.",
+        ingredients: [["Rice (200 g)", 4], ["Eggs (2)", 4], ["Carrots (2)", 3], ["Frozen peas", 5], ["Onion", 2]]
+      },
+      {
+        id: "hummus-plate", name: "Hummus, egg & veggie plate", emoji: "🧆", color: "#eee8d7",
+        tag: "No-fuss dinner", time: 15, category: "Vegetarian",
+        description: "A filling plate of hummus, boiled eggs, fresh vegetables and pita.",
+        ingredients: [["Hummus", 8], ["Eggs (2)", 4], ["Cucumber", 3], ["Tomatoes (2)", 5], ["Pita (2)", 4]]
+      },
+      {
+        id: "stuffed-peppers", name: "Rice-stuffed peppers", emoji: "🫑", color: "#e7ebd8",
+        tag: "Make-ahead meal", time: 50, category: "Vegan",
+        description: "Sweet peppers filled with herby rice and baked in tomato sauce.",
+        ingredients: [["Bell peppers (2)", 10], ["Rice (150 g)", 3], ["Crushed tomatoes", 6], ["Onion", 2], ["Parsley", 3]]
+      },
+      {
+        id: "banana-pancakes", name: "Banana oat pancakes", emoji: "🥞", color: "#f1e7d2",
+        tag: "Breakfast or snack", time: 15, category: "Vegetarian",
+        description: "Simple banana pancakes made with oats and a couple of eggs.",
+        ingredients: [["Banana (2)", 5], ["Eggs (2)", 4], ["Oats (100 g)", 3], ["Yogurt", 4], ["Honey", 3]]
       }
     ].map(recipe => ({
       ...recipe,
@@ -591,6 +697,31 @@
       return periodSelect.value === "day" ? 3 : 7;
     }
 
+    function renderPlannedMeals() {
+      const list = document.getElementById("planned-list");
+      document.getElementById("planned-count").textContent =
+        `${plan.length} ${plan.length === 1 ? "meal" : "meals"} selected`;
+      document.getElementById("planned-empty").hidden = plan.length > 0;
+      list.innerHTML = plan.map((recipe, index) => `
+        <li class="planned-item">
+          <div class="planned-item-info">
+            <strong>${recipe.emoji} ${recipe.name}</strong>
+            <span>${recipe.time} min · serves 2</span>
+          </div>
+          <div class="planned-item-end">
+            <strong>~₪${recipe.cost}</strong>
+            <button class="remove-meal" type="button" data-remove="${index}" aria-label="Remove ${recipe.name} from your plan">Remove</button>
+          </div>
+        </li>
+      `).join("");
+      list.querySelectorAll("[data-remove]").forEach(button => {
+        button.addEventListener("click", () => {
+          plan.splice(Number(button.dataset.remove), 1);
+          updatePlan();
+        });
+      });
+    }
+
     function updatePlan() {
       const total = plan.reduce((sum, recipe) => sum + recipe.cost, 0);
       const budget = Math.max(0, Number(budgetInput.value) || 0);
@@ -607,6 +738,7 @@
       emptyPlan.textContent = remaining < 0
         ? `Your plan is ₪${Math.abs(remaining)} over budget. Try fewer meals or choose lower-cost recipes.`
         : "";
+      renderPlannedMeals();
       renderRecipes();
     }
 
