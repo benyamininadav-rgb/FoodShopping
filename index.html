@@ -194,7 +194,7 @@
 
     .planned-heading {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       justify-content: space-between;
       gap: 12px;
       margin-bottom: 8px;
@@ -202,7 +202,48 @@
 
     .planned-heading h2 { margin: 0; font-size: 17px; letter-spacing: -.3px; }
     .planned-heading span, .planned-empty { color: var(--muted); font-size: 12px; }
+    .planned-heading-actions { display: flex; align-items: center; gap: 10px; }
+    .planned-add-button { min-height: 34px; flex: 0 0 auto; padding: 0 12px; }
     .planned-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+
+    .recipe-picker {
+      width: min(560px, calc(100vw - 32px));
+      max-height: min(720px, calc(100vh - 32px));
+      padding: 22px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 0 24px 80px rgba(25, 45, 33, .24);
+    }
+
+    .recipe-picker::backdrop { background: rgba(25, 39, 31, .48); }
+    .picker-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .picker-heading h2 { margin: 0; font-size: 21px; letter-spacing: -.6px; }
+    .picker-heading p { margin: 4px 0 14px; color: var(--muted); font-size: 12px; }
+    .picker-close { min-height: 34px; flex: 0 0 auto; padding: 0 10px; }
+    .picker-fields { display: grid; grid-template-columns: minmax(0, 1fr) 155px; gap: 9px; margin-bottom: 10px; }
+    .picker-fields input, .picker-fields select { min-height: 42px; }
+    .picker-status { min-height: 18px; margin: 0 0 8px; color: var(--muted); font-size: 11px; }
+    .picker-results { display: grid; max-height: min(440px, 52vh); gap: 6px; overflow-y: auto; padding-right: 3px; }
+
+    .picker-result {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: white;
+    }
+
+    .picker-result-info { min-width: 0; }
+    .picker-result-info strong { display: block; font-size: 12px; }
+    .picker-result-info span { color: var(--muted); font-size: 10px; }
+    .picker-result .button { min-height: 32px; flex: 0 0 auto; padding: 0 11px; }
+    .picker-result .button:disabled { background: #a7b5aa; cursor: not-allowed; }
 
     .planned-item {
       display: flex;
@@ -297,6 +338,18 @@
     }
 
     .budget-pill strong { color: var(--green); }
+
+    .recipe-tools {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 210px auto;
+      gap: 10px;
+      margin: 0 0 16px;
+    }
+
+    .recipe-tools input, .recipe-tools select { min-height: 42px; }
+    .recipe-count { align-self: center; color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .show-more-wrap { display: flex; justify-content: center; margin: 22px 0 0; }
+    .show-more-button { flex: 0 0 auto; padding: 0 20px; }
 
     .recipe-grid {
       display: grid;
@@ -452,6 +505,15 @@
       .plan-summary { padding-left: 10px; }
       .store-bar { align-items: flex-start; flex-direction: column; }
       .section-heading { align-items: flex-start; flex-direction: column; margin-top: 33px; }
+      .planned-heading { align-items: flex-start; }
+      .planned-heading-actions { align-items: flex-end; flex-direction: column-reverse; gap: 5px; }
+      .planned-heading-actions > span { text-align: right; }
+      .planned-meals { padding: 14px; }
+      .recipe-picker { padding: 17px; }
+      .picker-fields { grid-template-columns: 1fr; }
+      .recipe-tools { grid-template-columns: 1fr 1fr; }
+      .recipe-tools input { grid-column: 1 / -1; }
+      .recipe-count { grid-column: 1 / -1; }
       .recipe-grid { grid-template-columns: 1fr; }
       .recipe-art { min-height: 155px; }
       .recipe-description { min-height: 0; }
@@ -509,11 +571,32 @@
     <section class="planned-meals" aria-labelledby="planned-title">
       <div class="planned-heading">
         <h2 id="planned-title">Your meal plan</h2>
-        <span id="planned-count">0 meals selected</span>
+        <div class="planned-heading-actions">
+          <span id="planned-count">0 meals selected</span>
+          <button class="button button-secondary planned-add-button" id="open-picker" type="button">+ Add recipe</button>
+        </div>
       </div>
       <p class="planned-empty" id="planned-empty">Add a recipe below and it will appear here.</p>
       <ul class="planned-list" id="planned-list"></ul>
     </section>
+
+    <dialog class="recipe-picker" id="recipe-picker" aria-labelledby="picker-title">
+      <div class="picker-heading">
+        <div>
+          <h2 id="picker-title">Add a recipe</h2>
+          <p>Search all recipes and add one straight to your plan.</p>
+        </div>
+        <button class="button button-secondary picker-close" id="close-picker" type="button">Close</button>
+      </div>
+      <div class="picker-fields">
+        <input id="picker-search" type="search" placeholder="Search recipes or ingredients…" aria-label="Search recipes to add">
+        <select id="picker-category" aria-label="Filter recipes to add">
+          <option value="">All categories</option>
+        </select>
+      </div>
+      <p class="picker-status" id="picker-status" aria-live="polite"></p>
+      <div class="picker-results" id="picker-results"></div>
+    </dialog>
 
     <section class="store-bar" aria-label="Supermarkets near your selected city">
       <span><strong>Popular stores near <span id="city-label">Tel Aviv</span></strong> <span aria-hidden="true">·</span> open a map search</span>
@@ -528,7 +611,15 @@
       <span class="budget-pill"><span aria-hidden="true">●</span> Budget <strong id="budget-label">₪250 / week</strong></span>
     </div>
 
+    <div class="recipe-tools" aria-label="Find a recipe">
+      <input id="recipe-search" type="search" placeholder="Search recipes or ingredients…" aria-label="Search recipes or ingredients">
+      <select id="category-filter" aria-label="Filter recipes by category">
+        <option value="">All categories</option>
+      </select>
+      <span class="recipe-count" id="recipe-count" aria-live="polite"></span>
+    </div>
     <section class="recipe-grid" id="recipe-grid" aria-label="Recipe suggestions"></section>
+    <div class="show-more-wrap"><button class="button button-secondary show-more-button" id="show-more" type="button">Show more recipes</button></div>
     <div class="empty-plan" id="empty-plan" role="status"></div>
 
     <p class="footer-note"><strong>A note on prices:</strong> Ingredient costs are rough estimates in Israeli shekels for the amounts used in each recipe, not live supermarket prices. Store availability and prices vary by branch. Recipe links open a web search so you can choose a version you like. No precise location is collected.</p>
@@ -638,11 +729,244 @@
       cost: recipe.ingredients.reduce((total, ingredient) => total + ingredient[1], 0)
     }));
 
+    const additionalRecipeGroups = [
+      {
+        category: "Vegan", emoji: "🥣", color: "#f1dfca", tag: "Plant-powered", time: 30,
+        description: "A comforting, filling lentil dish made with affordable pantry staples.",
+        ingredients: [["Lentils (200 g)", 6], ["Onion", 2], ["Carrots (2)", 3], ["Crushed tomatoes", 6], ["Lemon", 2]],
+        names: [
+          "Red lentil tomato stew", "Lemon cumin lentil soup", "Carrot and red lentil dhal", "Smoky paprika lentils",
+          "Golden turmeric lentil bowl", "Spinach and lentil stew", "Harissa-style lentil soup", "Lentils with roasted carrots",
+          "Tomato lentils with pita", "Ginger lentil and carrot soup", "Simple herby green lentils", "Lentil and vegetable one-pot"
+        ]
+      },
+      {
+        category: "Vegan", emoji: "🧆", color: "#e5ead7", tag: "Chickpea favorite", time: 25,
+        description: "Chickpeas and fresh vegetables come together in a satisfying everyday meal.",
+        ingredients: [["Chickpeas (1 can)", 6], ["Tomatoes (2)", 5], ["Cucumber", 3], ["Onion", 2], ["Pita bread", 5]],
+        names: [
+          "Chickpea tomato masala", "Crispy chickpea rice bowl", "Lemony chickpea and cucumber salad", "Chickpea spinach curry",
+          "Roasted chickpea pita pockets", "Chickpea and zucchini skillet", "Chickpea tomato couscous", "Warm chickpeas with garlic pita",
+          "Chickpea and roasted pepper bowls", "Chickpea lemon herb salad", "Spiced chickpea potato hash", "Chickpea and carrot tagine"
+        ]
+      },
+      {
+        category: "Vegan", emoji: "🫘", color: "#eee5d7", tag: "Budget friendly", time: 30,
+        description: "A simple bean-based meal with tomatoes, vegetables and pantry seasoning.",
+        ingredients: [["Beans (1 can)", 6], ["Crushed tomatoes", 6], ["Onion", 2], ["Carrots (2)", 3], ["Bread", 6]],
+        names: [
+          "White bean tomato skillet", "Three-bean vegetable stew", "Black bean rice bowl", "Red bean and tomato soup",
+          "Butter bean and carrot stew", "Smoky black bean tacos", "White beans with lemon and herbs", "Bean and vegetable chili",
+          "Baked beans with pita", "Kidney bean tomato curry"
+        ]
+      },
+      {
+        category: "Vegan", emoji: "🍚", color: "#e4ece0", tag: "Easy rice bowl", time: 35,
+        description: "A colorful rice bowl with seasonal vegetables and a bright lemon finish.",
+        ingredients: [["Rice (200 g)", 4], ["Zucchini", 4], ["Carrots (2)", 3], ["Onion", 2], ["Lemon", 2]],
+        names: [
+          "Lemon zucchini rice bowl", "Roasted carrot and rice bowl", "Mediterranean vegetable rice", "Tomato and herb rice",
+          "Zucchini and chickpea rice", "Golden turmeric vegetable rice", "Garlic rice with roasted vegetables", "Peas and carrot pilaf",
+          "Eggplant tomato rice bowl", "Lemony green vegetable rice", "One-pot pepper and rice", "Parsley and lemon rice plate"
+        ]
+      },
+      {
+        category: "Vegetarian", emoji: "🍝", color: "#f2e7d2", tag: "Comfort food", time: 25,
+        description: "A comforting pasta dish with vegetables and a quick homemade sauce.",
+        ingredients: [["Pasta (250 g)", 5], ["Crushed tomatoes", 6], ["Onion", 2], ["Garlic", 2], ["Grated cheese", 8]],
+        names: [
+          "Garlic tomato spaghetti", "Creamy tomato and spinach pasta", "Lemon garlic zucchini pasta", "Roasted pepper tomato pasta",
+          "One-pot mushroom pasta", "Broccoli and cheese pasta", "Pasta with peas and parmesan", "Tomato olive and herb pasta",
+          "Carrot and tomato pasta sauce", "Spinach feta pasta", "Easy baked tomato macaroni", "Pasta with crispy chickpeas",
+          "Creamy garlic mushroom noodles", "Courgette and lemon pasta"
+        ]
+      },
+      {
+        category: "Vegetarian", emoji: "🥔", color: "#ece9d9", tag: "Simple and filling", time: 35,
+        description: "A hearty potato and vegetable meal with everyday ingredients.",
+        ingredients: [["Potatoes (3)", 6], ["Eggs (2)", 4], ["Onion", 2], ["Yogurt", 4], ["Parsley", 3]],
+        names: [
+          "Potato and spinach skillet", "Crispy potato breakfast hash", "Potato and zucchini fritters", "Cheesy baked potato wedges",
+          "Potato cauliflower curry", "Herby potato and egg bowl", "Roasted potatoes with feta", "Sweet potato chickpea tray bake",
+          "Potato and pea patties", "Garlic potatoes with yogurt dip"
+        ]
+      },
+      {
+        category: "Vegetarian", emoji: "🍳", color: "#f4e3ce", tag: "Quick egg meal", time: 20,
+        description: "A quick egg-based meal with fresh vegetables and a little cheese or bread.",
+        ingredients: [["Eggs (3)", 6], ["Tomatoes (2)", 5], ["Onion", 2], ["Feta", 6], ["Pita", 2]],
+        names: [
+          "Mushroom and herb omelet", "Tomato feta breakfast scramble", "Spinach and tomato frittata", "Pepper and onion baked eggs",
+          "Cheesy zucchini egg muffins", "Green herb and potato frittata", "Broccoli cheddar omelet", "Egg and tomato pita",
+          "Mushroom spinach breakfast skillet", "Simple garden vegetable frittata"
+        ]
+      },
+      {
+        category: "Chicken", emoji: "🍗", color: "#f0e2d2", tag: "Family favorite", time: 40,
+        description: "Tender chicken cooked with rice, vegetables and warming everyday spices.",
+        ingredients: [["Chicken (300 g)", 18], ["Rice (200 g)", 4], ["Onion", 2], ["Carrots (2)", 3], ["Lemon", 2]],
+        names: [
+          "Lemon chicken and rice", "Chicken paprika rice pot", "One-pot chicken with peas and rice", "Tomato chicken pilaf",
+          "Chicken carrot and rice skillet", "Herby chicken rice bake", "Garlic chicken with fluffy rice", "Chicken and chickpea rice",
+          "Mild curry chicken rice", "Chicken pepper and rice bowl", "Cumin chicken and tomato rice", "Golden turmeric chicken pilaf"
+        ]
+      },
+      {
+        category: "Chicken", emoji: "🍲", color: "#f2e5d7", tag: "One-pan dinner", time: 40,
+        description: "A simple chicken and vegetable dinner with a flavorful pan sauce.",
+        ingredients: [["Chicken (300 g)", 18], ["Potatoes (2)", 4], ["Carrots (2)", 3], ["Onion", 2], ["Lemon", 2]],
+        names: [
+          "Lemon garlic chicken and potatoes", "Chicken with roasted carrots", "One-pan chicken and zucchini", "Paprika chicken tray bake",
+          "Chicken with peppers and onions", "Honey mustard chicken and carrots", "Chicken potato and tomato bake", "Herby chicken vegetable roast",
+          "Chicken and green bean skillet", "Cumin chicken with roasted vegetables", "Tomato basil chicken skillet", "Chicken and sweet potato tray bake"
+        ]
+      },
+      {
+        category: "Pescatarian", emoji: "🐟", color: "#e3eaf0", tag: "Fresh and simple", time: 30,
+        description: "A simple fish supper with a fresh lemon and vegetable side.",
+        ingredients: [["White fish (250 g)", 20], ["Potatoes (2)", 4], ["Lemon", 2], ["Cucumber", 3], ["Yogurt", 4]],
+        names: [
+          "Lemon baked white fish", "Herby fish and potatoes", "Tomato baked fish supper", "Garlic fish with cucumber yogurt",
+          "Paprika fish and roasted carrots", "Fish and vegetable foil bake", "Crispy fish pita pockets", "One-pan fish with zucchini",
+          "Mediterranean lemon fish bowl", "Fish with warm potato salad"
+        ]
+      },
+      {
+        category: "Pescatarian", emoji: "🐟", color: "#e3eaf0", tag: "Pantry meal", time: 25,
+        description: "A quick tuna meal with affordable pantry staples and fresh vegetables.",
+        ingredients: [["Tuna (1 can)", 9], ["Pasta (200 g)", 4], ["Sweetcorn", 5], ["Tomatoes (2)", 5], ["Lemon", 2]],
+        names: [
+          "Tuna tomato pasta bowl", "Tuna and sweetcorn rice", "Lemony tuna and potato salad", "Tuna cucumber pita pockets",
+          "Tuna tomato baked pasta", "Tuna and chickpea salad", "Quick tuna fried rice", "Tuna sweetcorn potato cakes",
+          "Tuna and white bean lemon salad", "Tuna veggie couscous"
+        ]
+      },
+      {
+        category: "Vegetarian", emoji: "🥙", color: "#e5ead7", tag: "Ready in 20 min", time: 20,
+        description: "A fresh, quick meal packed with crunchy vegetables and a tasty filling.",
+        ingredients: [["Pita bread (2)", 4], ["Hummus", 8], ["Cucumber", 3], ["Tomatoes (2)", 5], ["Carrots (2)", 3]],
+        names: [
+          "Hummus and crunchy veggie pita", "Falafel-style chickpea wraps", "Grilled cheese and tomato pita", "Roasted vegetable hummus wraps",
+          "Cucumber feta and herb pita", "Warm bean and salad wraps", "Egg salad and veggie sandwiches", "Tomato mozzarella pita pockets",
+          "Spiced lentil lettuce wraps", "Zucchini and hummus flatbreads"
+        ]
+      }
+    ];
+
+    function ingredientsForRecipe(name, baseIngredients) {
+      const ingredients = baseIngredients.map(([ingredient, price]) => [ingredient, price]);
+      const additions = [
+        [/\bmushroom/i, "Mushrooms", 6],
+        [/\bspinach\b/i, "Spinach", 8],
+        [/\b(chickpea|falafel)\b/i, "Chickpeas", 6],
+        [/\bzucchini|courgette\b/i, "Zucchini", 4],
+        [/\b(broccoli|cauliflower)\b/i, "Broccoli", 6],
+        [/\b(peas|green bean)\b/i, "Frozen peas", 5],
+        [/\bpepper\b/i, "Bell pepper", 5],
+        [/\beggplant\b/i, "Eggplant", 6],
+        [/\bsweet potato\b/i, "Sweet potato", 5],
+        [/\b(feta|cheese|cheddar|parmesan|mozzarella)\b/i, "Cheese", 8],
+        [/\brice|pilaf\b/i, "Rice", 4],
+        [/\bpasta|spaghetti|macaroni|noodles\b/i, "Pasta", 5],
+        [/\bpotato\b/i, "Potatoes", 4],
+        [/\bcarrot\b/i, "Carrots", 3],
+        [/\btomato\b/i, "Tomatoes", 4],
+        [/\bcucumber\b/i, "Cucumber", 3],
+        [/\b(bean|beans)\b/i, "Beans", 6],
+        [/\blentil\b/i, "Lentils", 6],
+        [/\btuna\b/i, "Tuna", 9],
+        [/\bfish\b/i, "White fish", 20],
+        [/\bchicken\b/i, "Chicken", 18],
+        [/\bhummus\b/i, "Hummus", 8],
+        [/\blemon\b/i, "Lemon", 2]
+      ];
+
+      additions.forEach(([pattern, ingredient, price]) => {
+        if (pattern.test(name) && !ingredients.some(([item]) => item.toLowerCase().includes(ingredient.toLowerCase()))) {
+          ingredients.push([ingredient, price]);
+        }
+      });
+      return ingredients;
+    }
+
+    recipes.push(...additionalRecipeGroups.flatMap((group, groupIndex) =>
+      group.names.map((name, recipeIndex) => {
+        const ingredients = ingredientsForRecipe(name, group.ingredients);
+        return {
+          id: `extra-${groupIndex + 1}-${recipeIndex + 1}`,
+          name,
+          emoji: group.emoji,
+          color: group.color,
+          tag: group.tag,
+          time: group.time,
+          category: group.category,
+          description: group.description,
+          ingredients,
+          cost: ingredients.reduce((total, ingredient) => total + ingredient[1], 0)
+        };
+      })
+    ));
+
+    if (recipes.length !== 150) {
+      throw new Error(`Expected 150 recipes, found ${recipes.length}.`);
+    }
+
+    recipes.forEach(recipe => {
+      const categories = new Set([recipe.category]);
+      const name = recipe.name.toLowerCase();
+
+      if (recipe.category === "Vegan") categories.add("Vegetarian");
+      if (/breakfast|pancake|omelet|frittata|scramble|egg muffins|potato hash/.test(name)) {
+        categories.add("Breakfast");
+      } else if (/salad|pita|wrap|sandwich|couscous|bowl/.test(name)) {
+        categories.add("Lunch");
+      } else {
+        categories.add("Dinner");
+      }
+
+      if (recipe.time <= 20) categories.add("Quick & easy");
+      if (recipe.cost <= 25) categories.add("Under ₪25");
+      if (/soup/.test(name)) categories.add("Soups");
+      if (/salad/.test(name)) categories.add("Salads");
+      if (/pasta|spaghetti|macaroni|noodles/.test(name)) categories.add("Pasta");
+      if (/rice|pilaf/.test(name)) categories.add("Rice dishes");
+      if (/one-pot|one-pan|skillet|tray bake/.test(name) || /one-pot|one-pan/.test(recipe.tag)) {
+        categories.add("One-pan meals");
+      }
+      if (/shakshuka|hummus|falafel|pita|couscous|tahini/.test(name)) {
+        categories.add("Israeli-inspired");
+      }
+
+      recipe.categories = [...categories];
+    });
+
     const citySelect = document.getElementById("city");
     const budgetInput = document.getElementById("budget");
     const periodSelect = document.getElementById("period");
     const grid = document.getElementById("recipe-grid");
+    const searchInput = document.getElementById("recipe-search");
+    const categoryFilter = document.getElementById("category-filter");
+    const recipeCount = document.getElementById("recipe-count");
+    const showMoreButton = document.getElementById("show-more");
+    const recipePicker = document.getElementById("recipe-picker");
+    const pickerSearch = document.getElementById("picker-search");
+    const pickerCategory = document.getElementById("picker-category");
+    const pickerResults = document.getElementById("picker-results");
+    const pickerStatus = document.getElementById("picker-status");
     const plan = [];
+    let visibleRecipeCount = 18;
+
+    [...new Set(recipes.flatMap(recipe => recipe.categories))].sort().forEach(category => {
+      const option = document.createElement("option");
+      option.value = category;
+      option.textContent = category;
+      categoryFilter.append(option);
+
+      const pickerOption = document.createElement("option");
+      pickerOption.value = category;
+      pickerOption.textContent = category;
+      pickerCategory.append(pickerOption);
+    });
 
     function searchUrl(query) {
       return "https://www.google.com/search?q=" + encodeURIComponent(query);
@@ -658,7 +982,13 @@
 
     function renderRecipes() {
       const city = citySelect.value;
-      grid.innerHTML = recipes.map(recipe => {
+      const query = searchInput.value.trim().toLowerCase();
+      const selectedCategory = categoryFilter.value;
+      const filteredRecipes = filterRecipes(query, selectedCategory);
+      const shownRecipes = filteredRecipes.slice(0, visibleRecipeCount);
+      recipeCount.textContent = `Showing ${shownRecipes.length} of ${filteredRecipes.length} recipes`;
+      showMoreButton.hidden = shownRecipes.length >= filteredRecipes.length;
+      grid.innerHTML = shownRecipes.map(recipe => {
         const ingredientRows = recipe.ingredients.map(([name, price]) =>
           `<li><span>${name} · ~₪${price}</span><a href="${searchUrl(name + " " + stores[0] + " " + city + " Israel")}" target="_blank" rel="noopener noreferrer" aria-label="Search ${name} at ${stores[0]} near ${city}">Find ↗</a></li>`
         ).join("");
@@ -684,13 +1014,66 @@
       }).join("");
       grid.querySelectorAll("[data-add]").forEach(button => {
         button.addEventListener("click", () => {
-          if (plan.length >= mealLimit()) return;
-          const recipe = recipes.find(item => item.id === button.dataset.add);
-          if (!recipe) return;
-          plan.push(recipe);
-          updatePlan();
+          addRecipeToPlan(button.dataset.add);
         });
       });
+    }
+
+    function filterRecipes(query, category) {
+      return recipes.filter(recipe => {
+        const searchableText = `${recipe.name} ${recipe.category} ${recipe.categories.join(" ")} ${recipe.tag} ${recipe.ingredients.map(([name]) => name).join(" ")}`.toLowerCase();
+        return (!category || recipe.categories.includes(category)) && (!query || searchableText.includes(query));
+      });
+    }
+
+    function addRecipeToPlan(recipeId) {
+      if (plan.length >= mealLimit()) {
+        pickerStatus.textContent = `Your ${periodSelect.value} plan is full (${mealLimit()} meals). Remove a meal or change the plan length to add another.`;
+        return;
+      }
+      const recipe = recipes.find(item => item.id === recipeId);
+      if (!recipe) return;
+      plan.push(recipe);
+      updatePlan();
+      if (recipePicker.open) {
+        pickerStatus.textContent = `${recipe.name} added. ${plan.length} of ${mealLimit()} meals selected.`;
+        renderRecipePicker();
+      }
+    }
+
+    function renderRecipePicker() {
+      const matches = filterRecipes(pickerSearch.value.trim().toLowerCase(), pickerCategory.value);
+      pickerStatus.textContent = plan.length >= mealLimit()
+        ? `Your plan is full (${plan.length} of ${mealLimit()} meals). Remove a meal or change the plan length to add another.`
+        : `${matches.length} recipes found · ${mealLimit() - plan.length} ${mealLimit() - plan.length === 1 ? "meal slot" : "meal slots"} left`;
+      pickerResults.innerHTML = matches.map(recipe => {
+        const isFull = plan.length >= mealLimit();
+        return `
+          <div class="picker-result">
+            <div class="picker-result-info">
+              <strong>${recipe.emoji} ${recipe.name}</strong>
+              <span>${recipe.categories.slice(0, 3).join(" · ")} · ${recipe.time} min · about ₪${recipe.cost}</span>
+            </div>
+            <button class="button button-primary" type="button" data-picker-add="${recipe.id}" ${isFull ? "disabled" : ""}>Add</button>
+          </div>`;
+      }).join("");
+      pickerResults.querySelectorAll("[data-picker-add]").forEach(button => {
+        button.addEventListener("click", () => addRecipeToPlan(button.dataset.pickerAdd));
+      });
+    }
+
+    document.getElementById("open-picker").addEventListener("click", () => {
+      renderRecipePicker();
+      recipePicker.showModal();
+      pickerSearch.focus();
+    });
+    document.getElementById("close-picker").addEventListener("click", () => recipePicker.close());
+    pickerSearch.addEventListener("input", renderRecipePicker);
+    pickerCategory.addEventListener("change", renderRecipePicker);
+
+    function resetRecipeResults() {
+      visibleRecipeCount = 18;
+      renderRecipes();
     }
 
     function mealLimit() {
@@ -744,6 +1127,12 @@
 
     citySelect.addEventListener("change", () => {
       renderStores();
+      renderRecipes();
+    });
+    searchInput.addEventListener("input", resetRecipeResults);
+    categoryFilter.addEventListener("change", resetRecipeResults);
+    showMoreButton.addEventListener("click", () => {
+      visibleRecipeCount += 18;
       renderRecipes();
     });
     budgetInput.addEventListener("input", updatePlan);
