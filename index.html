@@ -4,8 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f6f7f2">
-  <meta name="description" content="Plan affordable meals in Israel, explore recipes, and find ingredients at nearby supermarkets.">
-  <title>Platewise — Good food, on your budget</title>
+  <meta name="description" content="FoodShopping Platewise helps you plan affordable meals in Israel, explore 150 recipes, estimate ingredient costs, and make a grocery list.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://benyamininadav-rgb.github.io/FoodShopping/">
+  <meta property="og:title" content="FoodShopping Platewise — Budget Meal Planner">
+  <meta property="og:description" content="Plan affordable meals in Israel, browse 150 recipes, estimate ingredient costs, and build a shopping list.">
+  <meta property="og:url" content="https://benyamininadav-rgb.github.io/FoodShopping/">
+  <meta property="og:type" content="website">
+  <title>FoodShopping Platewise | Budget Meal Planner for Israel</title>
   <style>
     :root {
       color-scheme: light;
@@ -124,7 +130,7 @@
 
     .planner {
       display: grid;
-      grid-template-columns: 1.12fr .88fr .88fr 1.04fr;
+      grid-template-columns: 1.1fr .85fr .82fr .72fr 1fr;
       gap: 16px;
       align-items: end;
       padding: 22px;
@@ -141,6 +147,8 @@
       font-size: 12px;
       font-weight: 700;
     }
+
+    .field-hint { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; }
 
     .input-wrap { position: relative; }
 
@@ -304,6 +312,69 @@
     }
 
     .store-chip:hover { background: white; border-color: #a9c2a8; }
+
+    .shopping-list-section {
+      margin-top: 44px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .shopping-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .shopping-heading h2 { margin: 0; font-size: 24px; letter-spacing: -.7px; }
+    .shopping-heading p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .shopping-actions { display: flex; flex-shrink: 0; gap: 8px; }
+    .shopping-actions .button { min-height: 36px; flex: 0 0 auto; padding: 0 11px; }
+
+    .budget-store-note {
+      margin: 16px 0 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #edf2e8;
+      color: #536159;
+      font-size: 12px;
+    }
+
+    .budget-store-note strong { color: var(--green-dark); }
+    .shopping-items { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+
+    .shopping-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .shopping-item-main { display: flex; min-width: 0; align-items: flex-start; gap: 9px; }
+    .shopping-item-main input { width: 16px; min-height: 16px; height: 16px; margin: 2px 0 0; accent-color: var(--green); }
+    .shopping-item-name { font-size: 13px; font-weight: 700; }
+    .shopping-item-quantity { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; }
+    .shopping-item-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+    .shopping-item-links a { color: var(--green); font-size: 10px; font-weight: 700; text-decoration: none; }
+    .shopping-item-links a:hover { text-decoration: underline; }
+    .shopping-item-cost { grid-column: 1 / -1; color: #536159; font-size: 11px; text-align: right; }
+    .shopping-total { display: flex; justify-content: space-between; gap: 12px; padding-top: 14px; font-size: 14px; font-weight: 800; }
+    .shopping-total strong { color: var(--green); }
+    .shopping-empty { margin: 16px 0 0; color: var(--muted); font-size: 13px; }
+
+    @media print {
+      .topbar, .hero, .planner, .planned-meals, .recipe-picker, .store-bar,
+      .section-heading, .recipe-tools, .recipe-grid, .show-more-wrap, .empty-plan, .footer-note,
+      .shopping-actions, .shopping-item-links { display: none !important; }
+      body { background: white; }
+      main { width: 100%; }
+      .shopping-list-section { margin: 0; padding: 0; border: 0; box-shadow: none; }
+    }
 
     .section-heading {
       display: flex;
@@ -562,6 +633,11 @@
           <option value="week" selected>One week</option>
         </select>
       </div>
+      <div class="field">
+        <label for="people">People to feed</label>
+        <input id="people" type="number" min="1" max="100" step="1" value="2" inputmode="numeric">
+        <span class="field-hint">Recipes start at 2 servings.</span>
+      </div>
       <div class="plan-summary" aria-live="polite">
         <strong id="plan-total">₪0 planned</strong>
         <span id="plan-subtitle">0 of 7 meals · ₪250 left</span>
@@ -622,7 +698,23 @@
     <div class="show-more-wrap"><button class="button button-secondary show-more-button" id="show-more" type="button">Show more recipes</button></div>
     <div class="empty-plan" id="empty-plan" role="status"></div>
 
-    <p class="footer-note"><strong>A note on prices:</strong> Ingredient costs are rough estimates in Israeli shekels for the amounts used in each recipe, not live supermarket prices. Store availability and prices vary by branch. Recipe links open a web search so you can choose a version you like. No precise location is collected.</p>
+    <section class="shopping-list-section" aria-labelledby="shopping-title">
+      <div class="shopping-heading">
+        <div>
+          <h2 id="shopping-title">Shopping list</h2>
+          <p id="shopping-subtitle">Ingredients from the recipes in your meal plan.</p>
+        </div>
+        <div class="shopping-actions">
+          <button class="button button-secondary" id="print-shopping-list" type="button">Print list</button>
+        </div>
+      </div>
+      <div class="budget-store-note" id="budget-store-note"></div>
+      <ul class="shopping-items" id="shopping-items"></ul>
+      <p class="shopping-empty" id="shopping-empty">Add recipes to your meal plan and their ingredients will appear here.</p>
+      <div class="shopping-total" id="shopping-total" hidden><span>Estimated ingredients total</span><strong id="shopping-cost">₪0</strong></div>
+    </section>
+
+    <p class="footer-note"><strong>A note on prices:</strong> Ingredient costs are rough estimates in Israeli shekels for the amounts used in each recipe, not live supermarket prices. Store availability and prices vary by branch. The budget-store suggestion is not a live price comparison; check local prices before shopping. Recipe links open a web search so you can choose a version you like. No precise location is collected.</p>
   </main>
 
   <script>
@@ -943,6 +1035,7 @@
     const citySelect = document.getElementById("city");
     const budgetInput = document.getElementById("budget");
     const periodSelect = document.getElementById("period");
+    const peopleInput = document.getElementById("people");
     const grid = document.getElementById("recipe-grid");
     const searchInput = document.getElementById("recipe-search");
     const categoryFilter = document.getElementById("category-filter");
@@ -972,12 +1065,94 @@
       return "https://www.google.com/search?q=" + encodeURIComponent(query);
     }
 
+    function peopleCount() {
+      return Math.min(100, Math.max(1, Math.floor(Number(peopleInput.value) || 1)));
+    }
+
+    function scaleAmount(amount) {
+      const factor = peopleCount() / 2;
+      const scaled = amount * factor;
+      return Number.isInteger(scaled) ? String(scaled) : String(Number(scaled.toFixed(2)));
+    }
+
+    function scaleIngredient(ingredient) {
+      return ingredient.replace(/\((\d+(?:\.\d+)?)([^)]*)\)/, (_, amount, unit) =>
+        `(${scaleAmount(Number(amount))}${unit})`
+      );
+    }
+
+    function scaledCost(cost) {
+      return Number((cost * peopleCount() / 2).toFixed(2));
+    }
+
     function renderStores() {
       const city = citySelect.value;
       document.getElementById("city-label").textContent = city;
       document.getElementById("store-options").innerHTML = stores.map(store =>
         `<a class="store-chip" href="${searchUrl(store + " supermarket " + city + " Israel")}" target="_blank" rel="noopener noreferrer">${store} ↗</a>`
       ).join("");
+    }
+
+    function shoppingItemKey(name) {
+      let key = name.replace(/\s*\([^)]*\)/g, "").trim().toLowerCase();
+      if (key === "pita bread") return "pita";
+      if (key.endsWith("ies")) return `${key.slice(0, -3)}y`;
+      if (key.endsWith("oes")) return key.slice(0, -2);
+      if (key.endsWith("s") && !key.endsWith("ss")) return key.slice(0, -1);
+      return key;
+    }
+
+    function renderShoppingList() {
+      const items = new Map();
+      plan.forEach(recipe => {
+        recipe.ingredients.forEach(([ingredient, price]) => {
+          const key = shoppingItemKey(ingredient);
+          const scaledName = scaleIngredient(ingredient);
+          const existing = items.get(key);
+          if (existing) {
+            existing.cost += scaledCost(price);
+            existing.recipes += 1;
+            if (!existing.quantities.includes(scaledName)) existing.quantities.push(scaledName);
+          } else {
+            items.set(key, {
+              name: ingredient.replace(/\s*\([^)]*\)/g, "").trim(),
+              quantities: [scaledName],
+              recipes: 1,
+              cost: scaledCost(price)
+            });
+          }
+        });
+      });
+
+      const shoppingItems = document.getElementById("shopping-items");
+      const budgetStore = "Rami Levy";
+      document.getElementById("shopping-subtitle").textContent = plan.length
+        ? `${items.size} ingredients for ${plan.length} planned ${plan.length === 1 ? "meal" : "meals"} · serving ${peopleCount()}.`
+        : "Ingredients from the recipes in your meal plan.";
+      document.getElementById("budget-store-note").innerHTML =
+        `<strong>Budget-first store to check: ${budgetStore}</strong> near ${citySelect.value}. This is a general suggestion, not a live comparison—prices vary by branch. Compare nearby stores before you go.`;
+
+      shoppingItems.innerHTML = [...items.entries()].map(([key, item]) => `
+        <li class="shopping-item">
+          <label class="shopping-item-main">
+            <input type="checkbox" aria-label="Mark ${item.name} as purchased">
+            <span>
+              <span class="shopping-item-name">${item.name}</span>
+              <span class="shopping-item-quantity">${item.quantities.join(" + ")} · used in ${item.recipes} ${item.recipes === 1 ? "recipe" : "recipes"}</span>
+            </span>
+          </label>
+          <div class="shopping-item-links">
+            <a href="${searchUrl(`${item.name} ${budgetStore} ${citySelect.value} Israel`)}" target="_blank" rel="noopener noreferrer">Find at ${budgetStore} ↗</a>
+            <a href="${searchUrl(`${item.name} supermarket ${citySelect.value} Israel price`)}" target="_blank" rel="noopener noreferrer">Compare stores ↗</a>
+          </div>
+          <span class="shopping-item-cost">Estimated share: ~₪${Number(item.cost.toFixed(2))}</span>
+        </li>
+      `).join("");
+
+      document.getElementById("shopping-empty").hidden = items.size > 0;
+      const total = [...items.values()].reduce((sum, item) => sum + item.cost, 0);
+      document.getElementById("shopping-total").hidden = items.size === 0;
+      document.getElementById("shopping-cost").textContent = `~₪${Number(total.toFixed(2))}`;
     }
 
     function renderRecipes() {
@@ -989,8 +1164,10 @@
       recipeCount.textContent = `Showing ${shownRecipes.length} of ${filteredRecipes.length} recipes`;
       showMoreButton.hidden = shownRecipes.length >= filteredRecipes.length;
       grid.innerHTML = shownRecipes.map(recipe => {
-        const ingredientRows = recipe.ingredients.map(([name, price]) =>
-          `<li><span>${name} · ~₪${price}</span><a href="${searchUrl(name + " " + stores[0] + " " + city + " Israel")}" target="_blank" rel="noopener noreferrer" aria-label="Search ${name} at ${stores[0]} near ${city}">Find ↗</a></li>`
+        const ingredientRows = recipe.ingredients.map(([name, price]) => {
+          const scaledName = scaleIngredient(name);
+          return `<li><span>${scaledName} · ~₪${scaledCost(price)}</span><a href="${searchUrl(name + " " + stores[0] + " " + city + " Israel")}" target="_blank" rel="noopener noreferrer" aria-label="Search ${name} at ${stores[0]} near ${city}">Find ↗</a></li>`;
+        }
         ).join("");
         const fullCount = plan.length >= mealLimit();
         return `
@@ -1000,8 +1177,8 @@
               <span class="recipe-emoji" aria-hidden="true">${recipe.emoji}</span>
             </div>
             <div class="recipe-content">
-              <div class="recipe-title-line"><h3>${recipe.name}</h3><span class="recipe-price">~₪${recipe.cost}</span></div>
-              <div class="recipe-meta"><span>◷ ${recipe.time} min</span><span>${recipe.category}</span><span>2 servings</span></div>
+              <div class="recipe-title-line"><h3>${recipe.name}</h3><span class="recipe-price">~₪${scaledCost(recipe.cost)}</span></div>
+              <div class="recipe-meta"><span>◷ ${recipe.time} min</span><span>${recipe.category}</span><span>${peopleCount()} servings</span></div>
               <p class="recipe-description">${recipe.description}</p>
               <p class="ingredient-heading">Ingredients · estimated cost</p>
               <ul class="ingredient-list">${ingredientRows}</ul>
@@ -1037,7 +1214,6 @@
       updatePlan();
       if (recipePicker.open) {
         pickerStatus.textContent = `${recipe.name} added. ${plan.length} of ${mealLimit()} meals selected.`;
-        renderRecipePicker();
       }
     }
 
@@ -1052,7 +1228,7 @@
           <div class="picker-result">
             <div class="picker-result-info">
               <strong>${recipe.emoji} ${recipe.name}</strong>
-              <span>${recipe.categories.slice(0, 3).join(" · ")} · ${recipe.time} min · about ₪${recipe.cost}</span>
+              <span>${recipe.categories.slice(0, 3).join(" · ")} · ${recipe.time} min · about ₪${scaledCost(recipe.cost)} · ${peopleCount()} servings</span>
             </div>
             <button class="button button-primary" type="button" data-picker-add="${recipe.id}" ${isFull ? "disabled" : ""}>Add</button>
           </div>`;
@@ -1089,10 +1265,10 @@
         <li class="planned-item">
           <div class="planned-item-info">
             <strong>${recipe.emoji} ${recipe.name}</strong>
-            <span>${recipe.time} min · serves 2</span>
+            <span>${recipe.time} min · serves ${peopleCount()}</span>
           </div>
           <div class="planned-item-end">
-            <strong>~₪${recipe.cost}</strong>
+            <strong>~₪${scaledCost(recipe.cost)}</strong>
             <button class="remove-meal" type="button" data-remove="${index}" aria-label="Remove ${recipe.name} from your plan">Remove</button>
           </div>
         </li>
@@ -1106,23 +1282,25 @@
     }
 
     function updatePlan() {
-      const total = plan.reduce((sum, recipe) => sum + recipe.cost, 0);
+      const total = plan.reduce((sum, recipe) => sum + scaledCost(recipe.cost), 0);
       const budget = Math.max(0, Number(budgetInput.value) || 0);
       const remaining = budget - total;
       const periodName = periodSelect.value === "day" ? "day" : "week";
-      document.getElementById("plan-total").textContent = `₪${total} planned`;
+      document.getElementById("plan-total").textContent = `₪${Number(total.toFixed(2))} planned`;
       document.getElementById("plan-subtitle").textContent =
-        `${plan.length} of ${mealLimit()} meals · ${remaining >= 0 ? `₪${remaining} left` : `₪${Math.abs(remaining)} over budget`}`;
+        `${plan.length} of ${mealLimit()} meals · ${remaining >= 0 ? `₪${Number(remaining.toFixed(2))} left` : `₪${Number(Math.abs(remaining).toFixed(2))} over budget`}`;
       document.getElementById("budget-label").textContent = `₪${budget} / ${periodName}`;
       document.getElementById("recipe-subtitle").textContent =
         `Choose up to ${mealLimit()} meals to build your ${periodName} plan. Each recipe serves about 2.`;
       const emptyPlan = document.getElementById("empty-plan");
       emptyPlan.classList.toggle("visible", remaining < 0);
       emptyPlan.textContent = remaining < 0
-        ? `Your plan is ₪${Math.abs(remaining)} over budget. Try fewer meals or choose lower-cost recipes.`
+        ? `Your plan is ₪${Number(Math.abs(remaining).toFixed(2))} over budget. Try fewer meals or choose lower-cost recipes.`
         : "";
       renderPlannedMeals();
+      renderShoppingList();
       renderRecipes();
+      if (recipePicker.open) renderRecipePicker();
     }
 
     citySelect.addEventListener("change", () => {
@@ -1136,10 +1314,17 @@
       renderRecipes();
     });
     budgetInput.addEventListener("input", updatePlan);
+    peopleInput.addEventListener("input", updatePlan);
+    peopleInput.addEventListener("change", () => {
+      peopleInput.value = peopleCount();
+      updatePlan();
+    });
     periodSelect.addEventListener("change", () => {
       while (plan.length > mealLimit()) plan.pop();
       updatePlan();
     });
+    citySelect.addEventListener("change", renderShoppingList);
+    document.getElementById("print-shopping-list").addEventListener("click", () => window.print());
 
     renderStores();
     updatePlan();
