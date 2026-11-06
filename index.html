@@ -420,6 +420,7 @@
     .recipe-tools input, .recipe-tools select { min-height: 42px; }
     .recipe-count { align-self: center; color: var(--muted); font-size: 12px; white-space: nowrap; }
     .show-more-wrap { display: flex; justify-content: center; margin: 22px 0 0; }
+    .show-more-wrap[hidden] { display: none; }
     .show-more-button { flex: 0 0 auto; padding: 0 20px; }
 
     .recipe-grid {
@@ -1477,7 +1478,7 @@
       const filteredRecipes = filterRecipes(query, selectedCategory);
       const shownRecipes = filteredRecipes.slice(0, visibleRecipeCount);
       recipeCount.textContent = `Showing ${shownRecipes.length} of ${filteredRecipes.length} recipes`;
-      showMoreButton.hidden = shownRecipes.length >= filteredRecipes.length;
+      showMoreButton.parentElement.hidden = shownRecipes.length >= filteredRecipes.length;
       grid.innerHTML = shownRecipes.map(recipe => {
         const ingredientRows = recipe.ingredients.map(([name, price]) => {
           const scaledName = scaleIngredient(name);
